@@ -1,180 +1,58 @@
 {
   "api": {
-    "offers": [
-      {
-        "id": 1,
-        "title": "Уютная квартира в центре",
-        "description": "Просторная квартира с отличным видом",
-        "publicationDate": "2024-01-11",
-        "city": "1",
-        "previewImage": "https://example.com/preview.jpg",
-        "propertyPhotos": [
-          "https://example.com/photo1.jpg",
-          "https://example.com/photo2.jpg",
-          "https://example.com/photo3.jpg",
-          "https://example.com/photo4.jpg",
-          "https://example.com/photo5.jpg",
-          "https://example.com/photo6.jpg"
-        ],
-        "premium": true,
-        "favorite": true,
-        "rating": 4.5,
-        "objectType": "Apartment",
-        "numberOfRooms": 2,
-        "numberOfGuests": 4,
-        "rentalCost": 5000,
-        "amenities": [
-          "Breakfast",
-          "Air conditioning",
-          "Laptop friendly workspace"
-        ],
-        "author": "https://example.com/user123",
-        "numberOfComments": 10,
-        "locationCoordinates": "48.85661, 2.351499"
-      },
-      {
-        "id": 2,
-        "title": "Уютный дом у реки",
-        "description": "Прекрасный дом с садом",
-        "publicationDate": "2024-01-12",
-        "city": "Cologne",
-        "previewImage": "https://example.com/preview2.jpg",
-        "propertyPhotos": [
-          "https://example.com/photo7.jpg",
-          "https://example.com/photo8.jpg",
-          "https://example.com/photo9.jpg",
-          "https://example.com/photo10.jpg",
-          "https://example.com/photo11.jpg",
-          "https://example.com/photo12.jpg"
-        ],
-        "premium": false,
-        "favorite": true,
-        "rating": 4.2,
-        "objectType": "House",
-        "numberOfRooms": 4,
-        "numberOfGuests": 8,
-        "rentalCost": 8000,
-        "amenities": ["Washer", "Towels", "Fridge"],
-        "author": "https://example.com/user456",
-        "numberOfComments": 5,
-        "locationCoordinates": "50.938361, 6.959974"
-      },
-      {
-        "id": 3,
-        "title": "Прекрасный дом с видом на горы",
-        "description": "Уютный дом с красивым видом на горы и лес",
-        "publicationDate": "2024-01-15",
-        "city": "Geneva",
-        "previewImage": "https://example.com/preview3.jpg",
-        "propertyPhotos": [
-          "https://example.com/photo13.jpg",
-          "https://example.com/photo14.jpg",
-          "https://example.com/photo15.jpg",
-          "https://example.com/photo16.jpg",
-          "https://example.com/photo17.jpg",
-          "https://example.com/photo18.jpg"
-        ],
-        "premium": true,
-        "favorite": false,
-        "rating": 4.8,
-        "objectType": "House",
-        "numberOfRooms": 5,
-        "numberOfGuests": 10,
-        "rentalCost": 12000,
-        "amenities": ["Washer", "Towels", "Fridge", "Air conditioning"],
-        "author": "https://example.com/user789",
-        "numberOfComments": 8,
-        "locationCoordinates": "46.2044, 6.1432"
-      },
-      {
-        "id": 4,
-        "title": "Студия в историческом центре",
-        "description": "Уютная студия с историческим шармом",
-        "publicationDate": "2024-01-20",
-        "city": "Rome",
-        "previewImage": "https://example.com/preview3.jpg",
-        "propertyPhotos": [
-          "https://example.com/photo13.jpg",
-          "https://example.com/photo14.jpg",
-          "https://example.com/photo15.jpg",
-          "https://example.com/photo16.jpg",
-          "https://example.com/photo17.jpg",
-          "https://example.com/photo18.jpg"
-        ],
-        "premium": true,
-        "favorite": false,
-        "rating": 4.7,
-        "objectType": "Apartment",
-        "numberOfRooms": 1,
-        "numberOfGuests": 2,
-        "rentalCost": 3000,
-        "amenities": [
-          "Air conditioning",
-          "Laptop friendly workspace",
-          "Washer"
-        ],
-        "author": "https://example.com/user789",
-        "numberOfComments": 12,
-        "locationCoordinates": "41.9028, 12.4964"
-      },
-      {
-        "id": 5,
-        "title": "Дом у озера с бассейном",
-        "description": "Прекрасный дом с видом на озеро и собственным бассейном",
-        "publicationDate": "2024-02-01",
-        "city": "Berlin",
-        "previewImage": "https://example.com/preview4.jpg",
-        "propertyPhotos": [
-          "https://example.com/photo19.jpg",
-          "https://example.com/photo20.jpg",
-          "https://example.com/photo21.jpg",
-          "https://example.com/photo22.jpg",
-          "https://example.com/photo23.jpg",
-          "https://example.com/photo24.jpg"
-        ],
-        "premium": true,
-        "favorite": true,
-        "rating": 4.9,
-        "objectType": "House",
-        "numberOfRooms": 6,
-        "numberOfGuests": 12,
-        "rentalCost": 15000,
-        "amenities": ["Washer", "Towels", "Fridge", "Breakfast"],
-        "author": "https://example.com/user101",
-        "numberOfComments": 15,
-        "locationCoordinates": "52.5200, 13.4050"
-      },
-      {
-        "id": 6,
-        "title": "Апартаменты на берегу реки",
-        "description": "Современные апартаменты с видом на реку",
-        "publicationDate": "2024-03-15",
-        "city": "Paris",
-        "previewImage": "https://example.com/preview7.jpg",
-        "propertyPhotos": [
-          "https://example.com/photo31.jpg",
-          "https://example.com/photo32.jpg",
-          "https://example.com/photo33.jpg",
-          "https://example.com/photo34.jpg",
-          "https://example.com/photo35.jpg",
-          "https://example.com/photo36.jpg"
-        ],
-        "premium": false,
-        "favorite": true,
-        "rating": 4.2,
-        "objectType": "Apartment",
-        "numberOfRooms": 3,
-        "numberOfGuests": 6,
-        "rentalCost": 8000,
-        "amenities": [
-          "Air conditioning",
-          "Laptop friendly workspace",
-          "Washer"
-        ],
-        "author": "https://example.com/user789",
-        "numberOfComments": 8,
-        "locationCoordinates": "41.9028, 12.4964"
-      }
+    "titles": [
+      "Просторное жилье с изысканным дизайном в центре города",
+      "Уютная квартира с панорамным видом на парк",
+      "Стильный дом с современной мебелью и бытовой техникой",
+      "Эксклюзивный пентхаус в элитном районе",
+      "Прекрасный дом с садом и бассейном в пригороде",
+      "Комфортабельная квартира с полным набором удобств",
+      "Апартаменты в новом жилом комплексе с инфраструктурой",
+      "Роскошная вилла с видом на море и собственным пляжем",
+      "Исторический особняк с современным уровнем комфорта",
+      "Элегантная студия в историческом центре города"
+    ],
+    "descriptions": [
+      "Просторное жилье с изысканным дизайном в центре города, где каждая деталь создана для вашего комфорта и удовлетворения самых изысканных вкусов. Отличное расположение и множество удобств делают это место идеальным для вашего пребывания.",
+      "Уютная квартира с панорамным видом на парк, где каждый уголок наполнен теплом и гостеприимством. Современный интерьер и внимание к деталям создают уникальную атмосферу, приглашая вас насладиться уровнем комфорта выше ожиданий.",
+      "Стильный дом с современной мебелью и бытовой техникой, где каждая комната предлагает максимальную функциональность и уют. Это идеальное жилье для тех, кто ценит современный дизайн и высокий уровень удобств в повседневной жизни.",
+      "Эксклюзивный пентхаус в элитном районе, предлагающий роскошное пространство с выдающимися видовыми характеристиками. Все аспекты этого жилья подчеркивают статус и утонченность для истинных ценителей роскоши.",
+      "Прекрасный дом с садом и бассейном в пригороде, где заботливо созданная атмосфера природы сочетается с современными удобствами. Это идеальное место для семейного отдыха и уединения в окружении природы.",
+      "Комфортабельная квартира с полным набором удобств, предназначенная для того, чтобы ваше проживание было максимально удобным и приятным. Современный дизайн и внимание к деталям создают атмосферу домашнего уюта.",
+      "Апартаменты в новом жилом комплексе с инфраструктурой, предлагающими широкий спектр удобств прямо у вашего порога. Современная архитектура и удобства сделают ваше пребывание комфортным и насыщенным впечатлениями.",
+      "Роскошная вилла с видом на море и собственным пляжем, предоставляющая неповторимый опыт проживания на берегу океана. Это идеальное место для тех, кто ценит роскошь, комфорт и приватность.",
+      "Исторический особняк с современным уровнем комфорта, где традиционные черты сочетаются с современной функциональностью. Это уникальное жилье предлагает вам шанс погрузиться в атмосферу прошлого, не теряя современных удобств.",
+      "Элегантная студия в историческом центре города, оборудованная всем необходимым для вашего комфортного пребывания. Уникальная архитектура и близость к основным достопримечательностям делают это место идеальным выбором для исследования городской жизни."
+    ],
+    "citys": [
+      "Paris",
+      "Cologne",
+      "Brussels",
+      "Amsterdam",
+      "Hamburg",
+      "Dusseldorf"
+    ],
+    "types": ["apartment", "house", "room", "hotel"],
+    "amenities": [
+      "Breakfast",
+      "Air conditioning",
+      "Laptop friendly workspace",
+      "Baby seat",
+      "Washer",
+      "Towels",
+      "Fridge"
+    ],
+    "images": [
+      "https://example.com/image1.jpg",
+      "https://example.com/image2.jpg",
+      "https://example.com/image3.jpg",
+      "https://example.com/image4.jpg",
+      "https://example.com/image5.jpg",
+      "https://example.com/image6.jpg",
+      "https://example.com/image7.jpg",
+      "https://example.com/image8.jpg",
+      "https://example.com/image9.jpg",
+      "https://example.com/image10.jpg"
     ]
   }
 }
