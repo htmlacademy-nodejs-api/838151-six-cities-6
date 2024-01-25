@@ -16,3 +16,7 @@ export function getRandomItems<T>(items: T[]): T[] {
 export function getRandomItem<T>(items: T[]): T {
   return items[generateRandomValue(0, items.length - 1)];
 }
+
+export function getRandomBoolean(): boolean {
+  return Math.random() < 0.5;
+}
