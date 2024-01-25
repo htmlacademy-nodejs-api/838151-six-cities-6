@@ -5,4 +5,5 @@ export type MockServerData = {
   types: string[];
   amenities: string[];
   images: string[];
+  coordinates: string[];
 };
