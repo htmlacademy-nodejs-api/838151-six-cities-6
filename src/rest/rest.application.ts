@@ -1,10 +1,13 @@
 import { Logger } from '../libs/logger/index.js';
 import { Config, RestSchema } from '../libs/config/index.js';
+import { inject, injectable } from 'inversify';
+import { Component } from '../types/index.js';
 
+@injectable()
 export class RestApplication {
   constructor(
-    private readonly logger: Logger,
-    private readonly config: Config<RestSchema>
+    @inject(Component.Logger) private readonly logger: Logger,
+    @inject(Component.Config) private readonly config: Config<RestSchema>
   ) {}
 
   public async init() {
