@@ -37,8 +37,8 @@ export class OfferEntity extends defaultClasses.TimeStamps implements Offer {
   @prop({ required: true, default: '' })
   public previewImage: string;
 
-  @prop({ required: true, default: '', min: 6, max: 6 })
-  public propertyPhotos: string[];
+  @prop({ required: true, default: '' })
+  public propertyPhotos: Array<string>;
 
   @prop({ required: true, default: false })
   public premium: boolean;
@@ -49,7 +49,7 @@ export class OfferEntity extends defaultClasses.TimeStamps implements Offer {
   @prop({ required: true, default: 1, min: 1, max: 5 })
   public rating: number;
 
-  @prop({ required: true, default: ObjectType })
+  @prop({ required: true, default: '' })
   public objectType: ObjectType;
 
   @prop({ required: true, default: 1, min: 1, max: 8 })
@@ -62,7 +62,7 @@ export class OfferEntity extends defaultClasses.TimeStamps implements Offer {
   public rentalCost: number;
 
   @prop({ required: true, default: AmenitiesType })
-  public amenities: AmenitiesType[];
+  public amenities: Array<AmenitiesType>;
 
   @prop({ required: true, default: '' })
   public author: string;
@@ -73,26 +73,26 @@ export class OfferEntity extends defaultClasses.TimeStamps implements Offer {
   @prop({ required: true, default: {} })
   public locationCoordinates: { latitude: number; longitude: number };
 
-  constructor(userData: Offer) {
+  constructor(offerData: Offer) {
     super();
 
-    this.title = userData.title;
-    this.description = userData.description;
-    this.publicationDate = userData.publicationDate;
-    this.city = userData.city;
-    this.previewImage = userData.previewImage;
-    this.propertyPhotos = userData.propertyPhotos;
-    this.premium = userData.premium;
-    this.favorite = userData.favorite;
-    this.rating = userData.rating;
-    this.objectType = userData.objectType;
-    this.numberOfRooms = userData.numberOfRooms;
-    this.numberOfGuests = userData.numberOfGuests;
-    this.rentalCost = userData.rentalCost;
-    this.amenities = userData.amenities;
-    this.author = userData.author;
-    this.numberOfComments = userData.numberOfComments;
-    this.locationCoordinates = userData.locationCoordinates;
+    this.title = offerData.title;
+    this.description = offerData.description;
+    this.publicationDate = offerData.publicationDate;
+    this.city = offerData.city;
+    this.previewImage = offerData.previewImage;
+    this.propertyPhotos = offerData.propertyPhotos;
+    this.premium = offerData.premium;
+    this.favorite = offerData.favorite;
+    this.rating = offerData.rating;
+    this.objectType = offerData.objectType;
+    this.numberOfRooms = offerData.numberOfRooms;
+    this.numberOfGuests = offerData.numberOfGuests;
+    this.rentalCost = offerData.rentalCost;
+    this.amenities = offerData.amenities;
+    this.author = offerData.author;
+    this.numberOfComments = offerData.numberOfComments;
+    this.locationCoordinates = offerData.locationCoordinates;
   }
 }
 
