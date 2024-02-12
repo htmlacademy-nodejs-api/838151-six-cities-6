@@ -13,7 +13,7 @@ export class HelpCommand implements Command {
         Команды:
             --version:                   # выводит номер версии
             --help:                      # печатает этот текст
-            --import <path>:             # импортирует данные из TSV
+            --import <path> <dblogin> <dbpassword> <dbhost> <dbname> <salt>:  # импортирует данные из TSV
             --generate <n> <path> <url>  # генерирует произвольное количество тестовых данных
     `);
   }

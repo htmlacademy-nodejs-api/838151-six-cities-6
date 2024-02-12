@@ -32,10 +32,10 @@ export class TSVOfferGenerator implements OfferGenerator {
     const city = getRandomItem<string>(this.mockData.citys);
     const previewImage = getRandomItem<string>(this.mockData.images);
     const propertyPhotos = getRandomItems<string>(this.mockData.images);
-    const premium = generateRandomValue(MIN_RAITING, MAX_RAITING).toString();
+    const premium = getRandomBoolean();
     const favorite = getRandomBoolean();
-    const rating = getRandomBoolean();
-    const objectType = getRandomBoolean();
+    const rating = generateRandomValue(MIN_RAITING, MAX_RAITING).toString();
+    const objectType = getRandomItem<string>(this.mockData.types);
     const numberOfRooms = generateRandomValue(
       MIN_ROOM_COUNT,
       MAX_ROOM_COUNT
@@ -49,7 +49,7 @@ export class TSVOfferGenerator implements OfferGenerator {
       MAX_RENT_PRICE
     ).toString();
     const amenities = getRandomItems<string>(this.mockData.amenities);
-    const author = getRandomItems<string>(this.mockData.images);
+    const author = getRandomItem<string>(this.mockData.users);
     const numberOfComments = generateRandomValue(
       MIN_COMMENT_COUNT,
       MAX_COMMENT_COUNT
