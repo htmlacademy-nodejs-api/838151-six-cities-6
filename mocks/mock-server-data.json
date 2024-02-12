@@ -44,7 +44,7 @@
       "Hamburg",
       "Dusseldorf"
     ],
-    "types": ["apartment", "house", "room", "hotel"],
+    "types": ["Apartment", "House", "Room", "Hotel"],
     "amenities": [
       "Breakfast",
       "Air conditioning",
