@@ -13,19 +13,10 @@ export class DefaultCommentService implements CommentService {
     private readonly commentModel: types.ModelType<CommentEntity>
   ) {}
 
-  public async create(
-    dto: CreateCommentDto
-  ): Promise<DocumentType<CommentEntity>> {
-    const comment = new CommentEntity(dto);
-    const result = await this.commentModel.create(comment);
-    this.logger.info(`New comment created: ${comment.text}`);
+  public async create(dto: CreateCommentDto): Promise<DocumentType<CommentEntity>> {
+    const result = await this.commentModel.create(dto);
+    this.logger.info(`New comment created: ${dto.text}`);
 
     return result;
-  }
-
-  public async findByOfferId(
-    id: string
-  ): Promise<DocumentType<CommentEntity>[] | null> {
-    return this.commentModel.find({ id });
   }
 }
