@@ -5,7 +5,7 @@ import { ObjectType } from '../../../types/object-type.enum.js';
 export class CreateOfferDto {
   public title: string;
   public description: string;
-  public publicationDate: string;
+  public publicationDate: Date;
   public city: CityType;
   public previewImage: string;
   public propertyPhotos: string[];
