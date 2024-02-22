@@ -6,7 +6,7 @@ Content-Type: application/json
 ###
 
 ## Поиск комментриев по id предложения
-GET http://localhost:3000/comments/65ca01e9ab9ff00e6139d833 HTTP/1.1
+GET http://localhost:3000/comments/65ca01e9ab9ff00e6139d820 HTTP/1.1
 Content-Type: application/json
 
 ###
@@ -17,7 +17,7 @@ Content-Type: application/json
 
 {
   "text": "Превосходное жилье для отпуска! Все было идеально - от местоположения до удобств. Хозяин был очень внимателен к нашим потребностям.",
-  "offerId": "65ca01e9ab9ff00e6139d833",
+  "offerId": "65ca01e9ab9ff00e6139d820",
   "userId": "65ca01e9ab9ff00e6139d829"
 }
 

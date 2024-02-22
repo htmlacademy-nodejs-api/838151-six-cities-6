@@ -4,6 +4,7 @@ import {
   prop,
   modelOptions,
 } from '@typegoose/typegoose';
+import mongoose, { ObjectId } from 'mongoose';
 
 // eslint-disable-next-line @typescript-eslint/no-unsafe-declaration-merging
 export interface CommentEntity extends defaultClasses.Base {}
@@ -23,11 +24,11 @@ export class CommentEntity extends defaultClasses.TimeStamps {
   @prop({ required: true, default: 1, min: 1, max: 5 })
   public rating: number;
 
-  @prop({ required: true, default: '' })
-  public offerId: string;
+  @prop({ required: true, type: mongoose.Types.ObjectId })
+  public offerId: ObjectId;
 
-  @prop({ required: true, default: '' })
-  public userId: string;
+  @prop({ required: true, type: mongoose.Types.ObjectId })
+  public userId: ObjectId;
 }
 
 export const CommentModel = getModelForClass(CommentEntity);
