@@ -4,6 +4,7 @@ import { Component } from '../../types/index.js';
 import { Logger } from '../../libs/logger/index.js';
 import { CommentService } from './comment-service.interface.js';
 import { CommentEntity, CreateCommentDto } from './index.js';
+import { SortType } from '../../types/sort-type.enum.js';
 
 @injectable()
 export class DefaultCommentService implements CommentService {
@@ -18,5 +19,12 @@ export class DefaultCommentService implements CommentService {
     this.logger.info(`New comment created: ${dto.text}`);
 
     return result;
+  }
+
+  public async findByOfferId(offerId: string): Promise<DocumentType<CommentEntity>[]> {
+    return this.commentModel
+      .find({ offerId })
+      .populate('userId')
+      .sort({ createdAt: SortType.Down });
   }
 }
