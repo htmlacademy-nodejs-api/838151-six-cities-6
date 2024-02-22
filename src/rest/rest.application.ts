@@ -5,7 +5,7 @@ import { Component } from '../types/index.js';
 import { DatabaseClient } from '../libs/database-client/index.js';
 import { getMongoURI } from '../helpers/index.js';
 import express, { Express } from 'express';
-import { Controller } from '../libs/rest/index.js';
+import { Controller, ExceptionFilter } from '../libs/rest/index.js';
 
 @injectable()
 export class RestApplication {
@@ -16,7 +16,9 @@ export class RestApplication {
     @inject(Component.Config) private readonly config: Config<RestSchema>,
     @inject(Component.DatabaseClient)
     private readonly databaseClient: DatabaseClient,
-    @inject(Component.CommentController) private readonly commentController: Controller
+    @inject(Component.CommentController) private readonly commentController: Controller,
+    @inject(Component.ExceptionFilter)
+    private readonly appExceptionFilter: ExceptionFilter
   ) {
     this.server = express();
   }
@@ -46,6 +48,10 @@ export class RestApplication {
     this.server.use(express.json());
   }
 
+  private async _initExceptionFilters() {
+    this.server.use(this.appExceptionFilter.catch.bind(this.appExceptionFilter));
+  }
+
   public async init() {
     this.logger.info('Application initialization');
 
@@ -61,6 +67,10 @@ export class RestApplication {
     this.logger.info('Init controllers');
     await this._initControllers();
     this.logger.info('Controller initialization completed');
+
+    this.logger.info('Init exception filters');
+    await this._initExceptionFilters();
+    this.logger.info('Exception filters initialization compleated');
 
     this.logger.info('Try to init server…');
     await this._initServer();
