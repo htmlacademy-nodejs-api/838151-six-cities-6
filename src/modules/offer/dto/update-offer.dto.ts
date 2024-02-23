@@ -18,6 +18,5 @@ export class UpdateOfferDto {
   public rentalCost?: number;
   public amenities?: AmenitiesType[];
   public author?: string;
-  public numberOfComments?: number;
   public locationCoordinates?: { latitude?: number; longitude?: number };
 }

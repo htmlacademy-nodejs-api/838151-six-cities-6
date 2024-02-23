@@ -4,7 +4,7 @@ import {
   prop,
   modelOptions,
 } from '@typegoose/typegoose';
-import { now } from 'mongoose';
+import mongoose, { ObjectId, now } from 'mongoose';
 import { CityType } from '../../types/city-type.enum.js';
 import { ObjectType } from '../../types/object-type.enum.js';
 import { AmenitiesType } from '../../types/amenities.enum.js';
@@ -63,8 +63,8 @@ export class OfferEntity extends defaultClasses.TimeStamps {
   @prop({ required: true, default: AmenitiesType })
   public amenities!: Array<AmenitiesType>;
 
-  @prop({ required: true, default: '' })
-  public author!: string;
+  @prop({ required: true, type: mongoose.Types.ObjectId, ref: 'User' })
+  public author!: ObjectId;
 
   @prop({ default: 0 })
   public numberOfComments!: number;

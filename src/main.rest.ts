@@ -5,11 +5,13 @@ import { Component } from './types/index.js';
 import { createRestApplicationContainer } from './rest/rest.container.js';
 import { createUserContainer } from './modules/user/index.js';
 import { createCommentContainer } from './modules/comment/index.js';
+import { createOfferContainer } from './modules/offer/index.js';
 
 async function bootstrap() {
   const appContainer = Container.merge(
     createRestApplicationContainer(),
     createUserContainer(),
+    createOfferContainer(),
     createCommentContainer()
   );
 

@@ -13,5 +13,6 @@ export interface OfferService {
   findFavoriteOffers(userId: string): Promise<DocumentType<OfferEntity>[] | null>;
   incCommentCount(offerId: string): Promise<DocumentType<OfferEntity> | null>;
   findById(id: string): Promise<DocumentType<OfferEntity> | null>;
+  switchFavorite(offerId: string): Promise<DocumentType<OfferEntity> | null>;
   deleteById(offerId: string): Promise<DocumentType<OfferEntity> | null>;
 }
