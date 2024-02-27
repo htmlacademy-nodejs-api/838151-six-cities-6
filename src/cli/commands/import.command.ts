@@ -4,10 +4,7 @@ import { getErrorMessage, getMongoURI } from '../../helpers/index.js';
 import { createOffer } from '../../helpers/offer.js';
 import { UserService } from '../../modules/user/user-service.interface.js';
 import { OfferService } from '../../modules/offer/offer-service.interface.js';
-import {
-  DatabaseClient,
-  MongoDatabaseClient,
-} from '../../libs/database-client/index.js';
+import { DatabaseClient, MongoDatabaseClient } from '../../libs/database-client/index.js';
 import { Logger } from '../../libs/logger/index.js';
 import { DefaultOfferService, OfferModel } from '../../modules/offer/index.js';
 import { DefaultUserService, UserModel } from '../../modules/user/index.js';
@@ -60,7 +57,7 @@ export class ImportCommand implements Command {
     await this.offerService.create({
       title: offer.title,
       description: offer.description,
-      publicationDate: offer.publicationDate,
+      publicationDate: new Date(offer.publicationDate),
       city: offer.city,
       previewImage: offer.previewImage,
       propertyPhotos: offer.propertyPhotos,

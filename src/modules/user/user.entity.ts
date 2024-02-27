@@ -35,6 +35,9 @@ export class UserEntity extends defaultClasses.TimeStamps implements User {
   @prop({ required: true, default: UserType.Normal })
   public userType: UserType;
 
+  @prop({ required: true, default: [] })
+  public favorites: string[];
+
   constructor(userData: User) {
     super();
 

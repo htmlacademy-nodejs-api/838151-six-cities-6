@@ -1,6 +1,8 @@
+import { ObjectId } from 'mongoose';
+
 export type Comment = {
   text: string;
-  publicationDate: string;
   rating: number;
-  author: string;
+  userId: ObjectId;
+  offerId: ObjectId;
 };

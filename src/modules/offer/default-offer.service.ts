@@ -6,15 +6,16 @@ import { OfferService } from './offer-service.interface.js';
 import { OfferEntity } from './offer.entity.js';
 import { UpdateOfferDto } from './dto/update-offer.dto.js';
 import { CreateOfferDto } from './dto/create-offer.dto.js';
-import { DEFAULT_OFFER_COUNT } from './offer.constants.js';
-import { SortType } from '../../types/sort-type.enum.js';
+import { CommentEntity } from '../comment/index.js';
 
 @injectable()
 export class DefaultOfferService implements OfferService {
   constructor(
     @inject(Component.Logger) private readonly logger: Logger,
     @inject(Component.OfferModel)
-    private readonly offerModel: types.ModelType<OfferEntity>
+    private readonly offerModel: types.ModelType<OfferEntity>,
+    @inject(Component.CommentModel)
+    private readonly commentModel: types.ModelType<CommentEntity>
   ) {}
 
   public async create(dto: CreateOfferDto): Promise<DocumentType<OfferEntity>> {
@@ -36,26 +37,42 @@ export class DefaultOfferService implements OfferService {
       .exec();
   }
 
-  public async find(count?: number): Promise<DocumentType<OfferEntity>[]> {
-    const limit = count ?? DEFAULT_OFFER_COUNT;
+  public async find(): Promise<DocumentType<OfferEntity>[]> {
     return this.offerModel
-      .find()
-      .sort({ publicationDate: SortType.Down })
-      .limit(limit)
-      .select(
-        'title rentalCost type isFavorite publicationDate city previewImage isPremium numberOfComments'
-      )
+      .aggregate([
+        {
+          $lookup: {
+            from: 'comments',
+            let: { offerId: '$_id' },
+            pipeline: [
+              { $match: { $expr: { $eq: ['$offerId', '$$offerId'] } } },
+              { $project: { _id: 1 } },
+            ],
+            as: 'comments',
+          },
+        },
+        {
+          $addFields: {
+            numberOfComments: { $size: '$comments' },
+          },
+        },
+        {
+          $project: {
+            comments: 0,
+          },
+        },
+      ])
       .exec();
   }
 
-  public async findById(id: string): Promise<DocumentType<OfferEntity> | null> {
-    return this.offerModel.findOne({ id });
+  public async findById(offerId: string): Promise<DocumentType<OfferEntity> | null> {
+    return this.offerModel.findOne({ _id: offerId }).exec();
   }
 
   public async findPremiumOffersByCity(
     city: string
   ): Promise<DocumentType<OfferEntity>[] | null> {
-    return this.offerModel.find({ city: city, isPremium: true });
+    return this.offerModel.find({ city: city, premium: true }).exec();
   }
 
   public async findFavoriteOffers(): Promise<DocumentType<OfferEntity>[] | null> {
@@ -69,7 +86,14 @@ export class DefaultOfferService implements OfferService {
     return this.offerModel.findByIdAndUpdate(offerId, dto, { new: true }).exec();
   }
 
+  public async switchFavorite(
+    offerId: string
+  ): Promise<DocumentType<OfferEntity> | null> {
+    return this.findById(offerId);
+  }
+
   public async deleteById(offerId: string): Promise<DocumentType<OfferEntity> | null> {
+    this.commentModel.deleteMany({ offerId: offerId }).exec();
     return this.offerModel.findByIdAndDelete(offerId).exec();
   }
 }
