@@ -1,6 +1,10 @@
 import { inject, injectable } from 'inversify';
 import { Request, Response } from 'express';
-import { BaseController, HttpMethod } from '../../libs/rest/index.js';
+import {
+  BaseController,
+  HttpMethod,
+  ValidateObjectIdMiddleware,
+} from '../../libs/rest/index.js';
 import { Logger } from '../../libs/logger/index.js';
 import { Component } from '../../types/index.js';
 import { CommentService } from './comment-service.interface.js';
@@ -21,6 +25,7 @@ export class CommentController extends BaseController {
       path: '/:offerId',
       method: HttpMethod.Get,
       handler: this.findByOfferId,
+      middlewares: [new ValidateObjectIdMiddleware('offerId')],
     });
     this.addRoute({ path: '/', method: HttpMethod.Post, handler: this.create });
   }
