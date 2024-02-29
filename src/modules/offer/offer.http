@@ -28,8 +28,8 @@ POST http://localhost:3000/offers HTTP/1.1
 Content-Type: application/json
 
 {
-  "title": "Уютная квартира в историческом центре города",
-  "description": "Прекрасная квартира с видом на исторические достопримечательности города. Идеально подходит для романтических уик-эндов или деловых поездок.",
+  "title": "Уютная квартира в центре Парижа",
+  "description": "Прекрасная квартира с видом на исторические достопримечательности города.",
   "publicationDate": "2023-12-15T08:00:00.000Z",
   "city": "Paris",
   "previewImage": "https://example.com/images/paris-apartment.jpg",

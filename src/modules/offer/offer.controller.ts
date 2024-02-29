@@ -3,6 +3,7 @@ import {
   BaseController,
   HttpError,
   HttpMethod,
+  ValidateDtoMiddleware,
   ValidateObjectIdMiddleware,
 } from '../../libs/rest/index.js';
 import { Logger } from '../../libs/logger/index.js';
@@ -11,7 +12,7 @@ import { Request, Response } from 'express';
 import { fillDTO } from '../../helpers/index.js';
 import { OfferRdo } from './rdo/offer.rdo.js';
 import { OfferService } from './offer-service.interface.js';
-import { UpdateOfferDto } from './index.js';
+import { CreateOfferDto, UpdateOfferDto } from './index.js';
 import { ParamsDictionary } from 'express-serve-static-core';
 import { StatusCodes } from 'http-status-codes';
 import { CreateOfferRequest } from './type/create-offer-request.type.js';
@@ -42,6 +43,7 @@ export class OfferController extends BaseController {
       path: '/',
       method: HttpMethod.Post,
       handler: this.create,
+      middlewares: [new ValidateDtoMiddleware(CreateOfferDto)],
     });
     this.addRoute({
       path: '/:offerId',
