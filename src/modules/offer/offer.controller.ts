@@ -1,6 +1,7 @@
 import { inject, injectable } from 'inversify';
 import {
   BaseController,
+  DocumentExistsMiddleware,
   HttpError,
   HttpMethod,
   ValidateDtoMiddleware,
@@ -37,7 +38,10 @@ export class OfferController extends BaseController {
       path: '/:offerId',
       method: HttpMethod.Get,
       handler: this.findById,
-      middlewares: [new ValidateObjectIdMiddleware('offerId')],
+      middlewares: [
+        new ValidateObjectIdMiddleware('offerId'),
+        new DocumentExistsMiddleware(this.offerService, 'Offer', 'offerId'),
+      ],
     });
     this.addRoute({
       path: '/',
@@ -87,13 +91,7 @@ export class OfferController extends BaseController {
   ): Promise<void> {
     const { offerId } = params;
     const offer = await this.offerService.findById(offerId);
-    if (!offer) {
-      throw new HttpError(
-        StatusCodes.NOT_FOUND,
-        `Offer with id ${offerId} not found.`,
-        'OfferController'
-      );
-    }
+
     this.ok(res, fillDTO(OfferRdo, offer));
   }
 

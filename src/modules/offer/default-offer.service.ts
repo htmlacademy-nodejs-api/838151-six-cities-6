@@ -65,6 +65,10 @@ export class DefaultOfferService implements OfferService {
       .exec();
   }
 
+  public async exists(documentId: string): Promise<boolean> {
+    return (await this.offerModel.exists({ _id: documentId })) !== null;
+  }
+
   public async findById(offerId: string): Promise<DocumentType<OfferEntity> | null> {
     return this.offerModel.findOne({ _id: offerId }).exec();
   }
