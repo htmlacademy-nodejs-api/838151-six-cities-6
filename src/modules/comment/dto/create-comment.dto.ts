@@ -11,6 +11,5 @@ export class CreateCommentDto {
   @IsMongoId({ message: CreateCommentValidationMessage.offerId.invalid })
   public offerId: mongoose.Types.ObjectId;
 
-  @IsMongoId({ message: CreateCommentValidationMessage.userId.invalid })
-  public userId: mongoose.Types.ObjectId;
+  public userId: string;
 }

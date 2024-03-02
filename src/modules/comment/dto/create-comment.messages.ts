@@ -7,7 +7,4 @@ export const CreateCommentValidationMessage = {
   offerId: {
     invalid: 'Offer ID must be a valid object ID',
   },
-  userId: {
-    invalid: 'User ID must be a valid object ID',
-  },
 };
