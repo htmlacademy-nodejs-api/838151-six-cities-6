@@ -30,7 +30,7 @@ Content-Type: application/json
 
 POST http://localhost:3000/users/status HTTP/1.1
 Content-Type: application/json
-Authorization: Bearer eyJhbGciOiJIUzI1NiJ9.eyJlbWFpbCI6ImsyM0BtYWlsLnJ1IiwibmFtZSI6IkphY2siLCJpZCI6IjY1ZTM2NGNiZmMxZjA4MGVhMzJiODAxOCIsImlhdCI6MTcwOTQwMjMzNywiZXhwIjoxNzA5NTc1MTM3fQ.5p57DJ7JIWiWO7mcOeMezQyK87WQRzeR-dQKoPIm458
+Authorization: Bearer eyJhbGciOiJIUzI1NiJ9.eyJlbWFpbCI6ImsyM0BtYWlsLnJ1IiwibmFtZSI6IkphY2siLCJpZCI6IjY1ZTM2NGNiZmMxZjA4MGVhMzJiODAxOCIsImlhdCI6MTcwOTQwOTQxMiwiZXhwIjoxNzA5NTgyMjEyfQ.0gfHPC4sY68t__O7hRlQOr1D1528HEaaVIkucrCL4gk
 
 ###
 

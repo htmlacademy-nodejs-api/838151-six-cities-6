@@ -40,7 +40,11 @@ export class UserController extends BaseController {
       middlewares: [new ValidateDtoMiddleware(CreateUserDto)],
     });
     this.addRoute({ path: '/login', method: HttpMethod.Post, handler: this.login });
-    this.addRoute({ path: '/status', method: HttpMethod.Post, handler: this.status });
+    this.addRoute({
+      path: '/status',
+      method: HttpMethod.Post,
+      handler: this.checkAuthenticate,
+    });
     this.addRoute({
       path: '/:userId/avatar',
       method: HttpMethod.Post,
@@ -49,11 +53,6 @@ export class UserController extends BaseController {
         new ValidateObjectIdMiddleware('userId'),
         new UploadFileMiddleware(this.configService.get('UPLOAD_DIRECTORY'), 'avatar'),
       ],
-    });
-    this.addRoute({
-      path: '/login',
-      method: HttpMethod.Get,
-      handler: this.checkAuthenticate,
     });
   }
 
@@ -94,9 +93,5 @@ export class UserController extends BaseController {
     const token = await this.authService.authenticate(user);
     const responseData = fillDTO(LoggedUserRdo, user);
     this.ok(res, Object.assign(responseData, { token }));
-  }
-
-  public async status(): Promise<void> {
-    throw new HttpError(StatusCodes.NOT_IMPLEMENTED, 'Not implemented', 'UserController');
   }
 }
