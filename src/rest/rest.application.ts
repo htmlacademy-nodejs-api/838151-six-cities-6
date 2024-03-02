@@ -8,6 +8,7 @@ import express, { Express } from 'express';
 import { Controller, ExceptionFilter } from '../libs/rest/index.js';
 import { ParseTokenMiddleware } from '../libs/rest/middleware/parse-token.middleware.js';
 import { STATIC_FILES_ROUTE, STATIC_UPLOAD_ROUTE } from './rest.constant.js';
+import cors from 'cors';
 
 @injectable()
 export class RestApplication {
@@ -70,6 +71,7 @@ export class RestApplication {
       express.static(this.config.get('STATIC_DIRECTORY_PATH'))
     );
     this.server.use(authenticateMiddleware.execute.bind(authenticateMiddleware));
+    this.server.use(cors());
   }
 
   private async _initExceptionFilters() {
