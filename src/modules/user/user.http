@@ -43,7 +43,7 @@ Content-Type: application/json
 
 ## Отправить изображение
 
-POST http://localhost:3000/users/65d8dda65965a2a5c4dfa31c/avatar HTTP/1.1
+POST http://localhost:3000/users/65258514a30fc6ef77c0edef/avatar HTTP/1.1
 Content-Type: multipart/form-data; boundary=----WebKitFormBoundary7MA4YWxkTrZu0gW
 
 ------WebKitFormBoundary7MA4YWxkTrZu0gW
