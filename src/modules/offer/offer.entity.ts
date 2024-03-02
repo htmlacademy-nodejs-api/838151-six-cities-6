@@ -4,7 +4,7 @@ import {
   prop,
   modelOptions,
 } from '@typegoose/typegoose';
-import mongoose, { ObjectId, now } from 'mongoose';
+import mongoose, { ObjectId } from 'mongoose';
 import { CityType } from '../../types/city-type.enum.js';
 import { ObjectType } from '../../types/object-type.enum.js';
 import { AmenitiesType } from '../../types/amenities.enum.js';
@@ -27,9 +27,6 @@ export class OfferEntity extends defaultClasses.TimeStamps {
   @prop({ required: true, minlength: 20, maxlength: 1024 })
   public description!: string;
 
-  @prop({ required: true, default: now })
-  public publicationDate!: string;
-
   @prop({ required: true, default: '' })
   public city!: CityType;
 
@@ -41,9 +38,6 @@ export class OfferEntity extends defaultClasses.TimeStamps {
 
   @prop({ required: true, default: false })
   public premium!: boolean;
-
-  @prop({ required: true, default: false })
-  public favorite!: boolean;
 
   @prop({ required: true, default: 1, min: 1, max: 5 })
   public rating!: number;

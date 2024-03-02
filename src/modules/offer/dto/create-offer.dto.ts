@@ -1,14 +1,10 @@
-import mongoose from 'mongoose';
 import { AmenitiesType } from '../../../types/amenities.enum.js';
 import { CityType } from '../../../types/city-type.enum.js';
 import { ObjectType } from '../../../types/object-type.enum.js';
 import {
   ArrayMinSize,
   IsArray,
-  IsBoolean,
-  IsDateString,
   IsEnum,
-  IsMongoId,
   IsNumber,
   IsString,
   Max,
@@ -30,12 +26,6 @@ export class CreateOfferDto {
   @MaxLength(100, { message: CreateOfferValidationMessage.description.maxLength })
   public description: string;
 
-  @IsDateString(
-    {},
-    { message: CreateOfferValidationMessage.publicationDate.invalidFormat }
-  )
-  public publicationDate: Date;
-
   @IsEnum(CityType, { message: CreateOfferValidationMessage.city.invalid })
   public city: CityType;
 
@@ -47,14 +37,6 @@ export class CreateOfferDto {
   @ArrayMinSize(1, { message: CreateOfferValidationMessage.propertyPhotos.minLength })
   @IsString({ each: true, message: CreateOfferValidationMessage.propertyPhotos.invalid })
   public propertyPhotos: string[];
-
-  @IsBoolean({ message: CreateOfferValidationMessage.premium.invalid })
-  public premium: boolean;
-
-  @IsNumber({}, { message: CreateOfferValidationMessage.rating.invalid })
-  @Min(1, { message: CreateOfferValidationMessage.rating.min })
-  @Max(5, { message: CreateOfferValidationMessage.rating.max })
-  public rating: number;
 
   @IsEnum(ObjectType, { message: CreateOfferValidationMessage.objectType.invalid })
   public objectType: ObjectType;
@@ -82,8 +64,7 @@ export class CreateOfferDto {
   })
   public amenities: AmenitiesType[];
 
-  @IsMongoId({ message: CreateOfferValidationMessage.author.invalid })
-  public author: mongoose.Types.ObjectId;
+  public author: string;
 
   @ValidateNested({ message: CreateOfferValidationMessage.location.invalid })
   public locationCoordinates: { latitude: number; longitude: number };
