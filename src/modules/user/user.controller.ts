@@ -39,7 +39,6 @@ export class UserController extends BaseController {
       middlewares: [new ValidateDtoMiddleware(CreateUserDto)],
     });
     this.addRoute({ path: '/login', method: HttpMethod.Post, handler: this.login });
-    this.addRoute({ path: '/logout', method: HttpMethod.Post, handler: this.logout });
     this.addRoute({ path: '/status', method: HttpMethod.Post, handler: this.status });
     this.addRoute({
       path: '/:userId/avatar',
@@ -96,10 +95,6 @@ export class UserController extends BaseController {
       token,
     });
     this.ok(res, responseData);
-  }
-
-  public async logout(): Promise<void> {
-    throw new HttpError(StatusCodes.NOT_IMPLEMENTED, 'Not implemented', 'UserController');
   }
 
   public async status(): Promise<void> {
