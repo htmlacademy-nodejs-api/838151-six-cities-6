@@ -19,16 +19,16 @@ export interface CommentEntity extends defaultClasses.Base {}
 // eslint-disable-next-line @typescript-eslint/no-unsafe-declaration-merging
 export class CommentEntity extends defaultClasses.TimeStamps {
   @prop({ required: true, minlength: 5, maxlength: 1024 })
-  public text: string;
+  public text!: string;
 
   @prop({ required: true, default: 1, min: 1, max: 5 })
-  public rating: number;
+  public rating!: number;
 
-  @prop({ required: true, type: mongoose.Types.ObjectId })
-  public offerId: ObjectId;
+  @prop({ required: true, type: mongoose.Types.ObjectId, ref: 'Offer' })
+  public offerId!: ObjectId;
 
-  @prop({ required: true, type: mongoose.Types.ObjectId })
-  public userId: ObjectId;
+  @prop({ required: true, type: mongoose.Types.ObjectId, ref: 'User' })
+  public userId!: ObjectId;
 }
 
 export const CommentModel = getModelForClass(CommentEntity);

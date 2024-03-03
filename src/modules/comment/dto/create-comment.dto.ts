@@ -1,5 +1,4 @@
-import { IsMongoId, IsString, MaxLength, MinLength } from 'class-validator';
-import mongoose from 'mongoose';
+import { IsNumber, IsString, Min, Max, MaxLength, MinLength } from 'class-validator';
 import { CreateCommentValidationMessage } from '../index.js';
 
 export class CreateCommentDto {
@@ -8,8 +7,12 @@ export class CreateCommentDto {
   @MaxLength(1024, { message: CreateCommentValidationMessage.text.maxLength })
   public text: string;
 
-  @IsMongoId({ message: CreateCommentValidationMessage.offerId.invalid })
-  public offerId: mongoose.Types.ObjectId;
+  @IsNumber({}, { message: CreateCommentValidationMessage.rating.invalid })
+  @Min(1, { message: CreateCommentValidationMessage.rating.min })
+  @Max(5, { message: CreateCommentValidationMessage.rating.max })
+  public rating: number;
+
+  public offerId: string;
 
   public userId: string;
 }

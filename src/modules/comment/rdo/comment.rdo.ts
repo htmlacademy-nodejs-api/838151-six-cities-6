@@ -1,5 +1,4 @@
 import { Expose } from 'class-transformer';
-import { ObjectId } from 'mongoose';
 
 export class CommentRdo {
   @Expose()
@@ -9,7 +8,7 @@ export class CommentRdo {
   public rating: number;
 
   @Expose()
-  public userId: ObjectId;
+  public userId: string;
 
   @Expose()
   public createdAt: Date;

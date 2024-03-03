@@ -21,6 +21,10 @@ export class DefaultCommentService implements CommentService {
     return result;
   }
 
+  public async findById(commentId: string): Promise<DocumentType<CommentEntity> | null> {
+    return this.commentModel.findOne({ _id: commentId }).exec();
+  }
+
   public async findByOfferId(offerId: string): Promise<DocumentType<CommentEntity>[]> {
     return this.commentModel
       .find({ offerId })

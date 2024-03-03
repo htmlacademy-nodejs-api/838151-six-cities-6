@@ -32,7 +32,11 @@ export class CommentController extends BaseController {
         new ValidateObjectIdMiddleware('offerId'),
       ],
     });
-    this.addRoute({ path: '/', method: HttpMethod.Post, handler: this.create });
+    this.addRoute({
+      path: '/',
+      method: HttpMethod.Post,
+      handler: this.create,
+    });
   }
 
   public async findByOfferId(req: Request, res: Response): Promise<void> {
@@ -45,10 +49,11 @@ export class CommentController extends BaseController {
     { body, tokenPayload }: CreateCommentRequest,
     res: Response
   ): Promise<void> {
-    const comment = await this.commentService.create({
+    const result = await this.commentService.create({
       ...body,
       userId: tokenPayload.id,
     });
+    const comment = await this.commentService.findById(result.id);
     this.created(res, fillDTO(CommentRdo, comment));
   }
 }

@@ -42,7 +42,6 @@ export class ImportCommand implements Command {
   }
 
   private async saveOffer(offer: Offer) {
-    console.log(offer);
     const user = await this.userService.findOrCreate(
       {
         email: offer.author,

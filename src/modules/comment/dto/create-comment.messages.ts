@@ -7,4 +7,9 @@ export const CreateCommentValidationMessage = {
   offerId: {
     invalid: 'Offer ID must be a valid object ID',
   },
+  rating: {
+    invalid: 'Rating must be a number.',
+    min: 'Rating must be at least 1.',
+    max: 'Rating must be at most 5.',
+  },
 };
