@@ -50,7 +50,7 @@ Authorization: Bearer eyJhbGciOiJIUzI1NiJ9.eyJlbWFpbCI6ImsyM0BtYWlsLnJ1IiwibmFtZ
 ###
 
 ##  Обновить предложение
-PATCH http://localhost:3000/offers/65e42753d2fbed3809da8013 HTTP/1.1
+PATCH http://localhost:3000/offers/65e3aac4c48a260321413348 HTTP/1.1
 Content-Type: application/json
 Authorization: Bearer eyJhbGciOiJIUzI1NiJ9.eyJlbWFpbCI6ImsyM0BtYWlsLnJ1IiwibmFtZSI6IkphY2siLCJpZCI6IjY1ZTM2NGNiZmMxZjA4MGVhMzJiODAxOCIsImlhdCI6MTcwOTQwOTQxMiwiZXhwIjoxNzA5NTgyMjEyfQ.0gfHPC4sY68t__O7hRlQOr1D1528HEaaVIkucrCL4gk
 

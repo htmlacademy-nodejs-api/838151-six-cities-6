@@ -37,6 +37,26 @@ export class DefaultOfferService implements OfferService {
       .exec();
   }
 
+  public async incRatingCount(
+    offerId: string
+  ): Promise<DocumentType<OfferEntity> | null> {
+    const comments = await this.commentModel.find({ offerId: offerId }).exec();
+
+    if (comments.length === 0) {
+      return null;
+    }
+
+    const totalRating = comments.reduce((acc, comment) => acc + comment.rating, 0);
+
+    const averageRating = (totalRating / comments.length).toFixed(1);
+
+    const updatedOffer = await this.offerModel
+      .findByIdAndUpdate(offerId, { rating: averageRating })
+      .exec();
+
+    return updatedOffer;
+  }
+
   public async find(): Promise<DocumentType<OfferEntity>[]> {
     return this.offerModel
       .aggregate([

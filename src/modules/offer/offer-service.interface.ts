@@ -13,6 +13,7 @@ export interface OfferService extends DocumentExists {
   findPremiumOffersByCity(city: string): Promise<DocumentType<OfferEntity>[] | null>;
   findFavoriteOffers(userId: string): Promise<DocumentType<OfferEntity>[] | null>;
   incCommentCount(offerId: string): Promise<DocumentType<OfferEntity> | null>;
+  incRatingCount(offerId: string): Promise<DocumentType<OfferEntity> | null>;
   findById(id: string): Promise<DocumentType<OfferEntity> | null>;
   switchFavorite(offerId: string): Promise<DocumentType<OfferEntity> | null>;
   deleteById(offerId: string): Promise<DocumentType<OfferEntity> | null>;
