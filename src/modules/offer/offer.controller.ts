@@ -21,13 +21,16 @@ import { CreateOfferRequest } from './type/create-offer-request.type.js';
 import { ParamOfferId } from './type/param-offerid.type.js';
 import { PrivateRouteMiddleware } from '../../libs/rest/middleware/private-route.middleware.js';
 import { Config, RestSchema } from '../../libs/config/index.js';
+import { UserService } from '../user/index.js';
+import { DEFAULT_OFFER_COUNT } from './offer.constants.js';
 
 @injectable()
 export class OfferController extends BaseController {
   constructor(
     @inject(Component.Logger) protected readonly logger: Logger,
     @inject(Component.OfferService) private readonly offerService: OfferService,
-    @inject(Component.Config) private readonly configService: Config<RestSchema>
+    @inject(Component.Config) private readonly configService: Config<RestSchema>,
+    @inject(Component.UserService) private readonly userService: UserService
   ) {
     super(logger);
 
@@ -78,7 +81,7 @@ export class OfferController extends BaseController {
       handler: this.favoriteOffers,
     });
     this.addRoute({
-      path: '/favorites/:offerId',
+      path: '/:offerId/favorites',
       method: HttpMethod.Patch,
       handler: this.switchFavorite,
       middlewares: [new ValidateObjectIdMiddleware('offerId')],
@@ -100,8 +103,12 @@ export class OfferController extends BaseController {
     });
   }
 
-  public async find(_req: Request, res: Response): Promise<void> {
-    const offers = await this.offerService.find();
+  public async find({ tokenPayload, query }: Request, res: Response): Promise<void> {
+    let count: number = DEFAULT_OFFER_COUNT;
+    if (query && typeof query.count === 'string') {
+      count = parseInt(query.count, 10);
+    }
+    const offers = await this.offerService.find(count, tokenPayload?.id);
     const responseData = fillDTO(OfferRdo, offers);
     this.ok(res, responseData);
   }
@@ -157,14 +164,21 @@ export class OfferController extends BaseController {
   }
 
   public async switchFavorite(
-    _req: Request<ParamsDictionary, unknown, UpdateOfferDto>,
-    _res: Response
+    { params, tokenPayload }: Request<ParamOfferId, unknown, UpdateOfferDto>,
+    res: Response
   ): Promise<void> {
-    throw new HttpError(
-      StatusCodes.NOT_IMPLEMENTED,
-      'Not implemented',
-      'OfferController'
-    );
+    const { offerId } = params;
+    const offer = await this.offerService.findById(offerId);
+
+    if (!offer) {
+      throw new HttpError(
+        StatusCodes.NOT_FOUND,
+        `Offer with id ${offerId} not found.`,
+        'OfferController'
+      );
+    }
+    const result = await this.userService.switchFavorite(offerId, tokenPayload.id);
+    this.ok(res, fillDTO(OfferRdo, result));
   }
 
   public async delete({ params }: Request<ParamOfferId>, res: Response): Promise<void> {

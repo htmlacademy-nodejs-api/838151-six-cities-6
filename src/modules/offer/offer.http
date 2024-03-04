@@ -2,6 +2,7 @@
 ## Получить список предложений
 GET http://localhost:3000/offers HTTP/1.1
 Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiJ9.eyJlbWFpbCI6ImsyM0BtYWlsLnJ1IiwibmFtZSI6IkphY2siLCJpZCI6IjY1ZTM2NGNiZmMxZjA4MGVhMzJiODAxOCIsImlhdCI6MTcwOTQwOTQxMiwiZXhwIjoxNzA5NTgyMjEyfQ.0gfHPC4sY68t__O7hRlQOr1D1528HEaaVIkucrCL4gk
 
 ###
 
@@ -18,8 +19,9 @@ Content-Type: application/json
 ###
 
 ##  Добавить/удалить предложение в избранное
-PATCH http://localhost:3000/offers/favorites/65ca01e9ab9ff00e6139d833 HTTP/1.1
+PATCH http://localhost:3000/offers/65e441727846133d25534523/favorites HTTP/1.1
 Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiJ9.eyJlbWFpbCI6ImsyM0BtYWlsLnJ1IiwibmFtZSI6IkphY2siLCJpZCI6IjY1ZTM2NGNiZmMxZjA4MGVhMzJiODAxOCIsImlhdCI6MTcwOTQwOTQxMiwiZXhwIjoxNzA5NTgyMjEyfQ.0gfHPC4sY68t__O7hRlQOr1D1528HEaaVIkucrCL4gk
 
 ###
 

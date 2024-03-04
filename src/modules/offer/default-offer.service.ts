@@ -57,7 +57,10 @@ export class DefaultOfferService implements OfferService {
     return updatedOffer;
   }
 
-  public async find(): Promise<DocumentType<OfferEntity>[]> {
+  public async find(
+    count: number,
+    userId?: string
+  ): Promise<DocumentType<OfferEntity>[]> {
     return this.offerModel
       .aggregate([
         {
@@ -80,6 +83,41 @@ export class DefaultOfferService implements OfferService {
           $project: {
             comments: 0,
           },
+        },
+        {
+          $lookup: {
+            as: 'matchedUsers',
+            from: 'users',
+            foreignField: 'favorites',
+            localField: '_id',
+          },
+        },
+        {
+          $addFields: {
+            favorite: {
+              $cond: {
+                if: {
+                  $gt: [
+                    {
+                      $size: {
+                        $filter: {
+                          input: '$matchedUsers',
+                          as: 'user',
+                          cond: { $eq: ['$$user._id', { $toObjectId: userId }] },
+                        },
+                      },
+                    },
+                    0,
+                  ],
+                },
+                then: true,
+                else: false,
+              },
+            },
+          },
+        },
+        {
+          $limit: count,
         },
       ])
       .exec();
@@ -108,12 +146,6 @@ export class DefaultOfferService implements OfferService {
     dto: UpdateOfferDto
   ): Promise<DocumentType<OfferEntity> | null> {
     return this.offerModel.findByIdAndUpdate(offerId, dto, { new: true }).exec();
-  }
-
-  public async switchFavorite(
-    offerId: string
-  ): Promise<DocumentType<OfferEntity> | null> {
-    return this.findById(offerId);
   }
 
   public async deleteById(offerId: string): Promise<DocumentType<OfferEntity> | null> {
