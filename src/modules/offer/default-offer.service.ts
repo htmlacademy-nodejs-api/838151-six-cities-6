@@ -65,27 +65,6 @@ export class DefaultOfferService implements OfferService {
       .aggregate([
         {
           $lookup: {
-            from: 'comments',
-            let: { offerId: '$_id' },
-            pipeline: [
-              { $match: { $expr: { $eq: ['$offerId', '$$offerId'] } } },
-              { $project: { _id: 1 } },
-            ],
-            as: 'comments',
-          },
-        },
-        {
-          $addFields: {
-            numberOfComments: { $size: '$comments' },
-          },
-        },
-        {
-          $project: {
-            comments: 0,
-          },
-        },
-        {
-          $lookup: {
             as: 'matchedUsers',
             from: 'users',
             foreignField: 'favorites',
