@@ -22,6 +22,8 @@ import { AuthService } from '../auth/index.js';
 import { LoggedUserRdo } from './rdo/logged-user.rdo.js';
 import { UploadUserAvatarRdo } from './rdo/upload-user-avatar.rdo.js';
 
+const MILLISECONDS_PER_SECOND: number = 1000;
+
 @injectable()
 export class UserController extends BaseController {
   constructor(
@@ -58,9 +60,8 @@ export class UserController extends BaseController {
 
   public async checkAuthenticate({ tokenPayload }: Request, res: Response) {
     const foundedUser = await this.userService.findByEmail(tokenPayload.email);
-    console.log(tokenPayload);
 
-    const currentTime = Date.now() / 1000;
+    const currentTime = Date.now() / MILLISECONDS_PER_SECOND;
 
     if (
       !foundedUser ||
