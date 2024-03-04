@@ -7,6 +7,7 @@ import { OfferEntity } from './offer.entity.js';
 import { UpdateOfferDto } from './dto/update-offer.dto.js';
 import { CreateOfferDto } from './dto/create-offer.dto.js';
 import { CommentEntity } from '../comment/index.js';
+import mongoose from 'mongoose';
 
 @injectable()
 export class DefaultOfferService implements OfferService {
@@ -106,8 +107,49 @@ export class DefaultOfferService implements OfferService {
     return (await this.offerModel.exists({ _id: documentId })) !== null;
   }
 
-  public async findById(offerId: string): Promise<DocumentType<OfferEntity> | null> {
-    return this.offerModel.findOne({ _id: offerId }).exec();
+  public async findById(
+    offerId: string,
+    userId: string
+  ): Promise<DocumentType<OfferEntity> | null> {
+    const offer = await this.offerModel
+      .aggregate([
+        { $match: { _id: new mongoose.Types.ObjectId(offerId) } },
+        {
+          $lookup: {
+            as: 'matchedUsers',
+            from: 'users',
+            foreignField: 'favorites',
+            localField: '_id',
+          },
+        },
+        {
+          $addFields: {
+            favorite: {
+              $cond: {
+                if: {
+                  $gt: [
+                    {
+                      $size: {
+                        $filter: {
+                          input: '$matchedUsers',
+                          as: 'user',
+                          cond: { $eq: ['$$user._id', { $toObjectId: userId }] },
+                        },
+                      },
+                    },
+                    0,
+                  ],
+                },
+                then: true,
+                else: false,
+              },
+            },
+          },
+        },
+      ])
+      .exec();
+
+    return offer[0];
   }
 
   public async findPremiumOffersByCity(

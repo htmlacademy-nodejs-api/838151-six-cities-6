@@ -114,11 +114,11 @@ export class OfferController extends BaseController {
   }
 
   public async findById(
-    { params }: Request<ParamsDictionary, unknown, UpdateOfferDto>,
+    { params, tokenPayload }: Request<ParamsDictionary, unknown, UpdateOfferDto>,
     res: Response
   ): Promise<void> {
     const { offerId } = params;
-    const offer = await this.offerService.findById(offerId);
+    const offer = await this.offerService.findById(offerId, tokenPayload?.id);
 
     this.ok(res, fillDTO(OfferRdo, offer));
   }

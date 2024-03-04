@@ -14,6 +14,6 @@ export interface OfferService extends DocumentExists {
   findFavoriteOffers(userId: string): Promise<DocumentType<OfferEntity>[] | null>;
   incCommentCount(offerId: string): Promise<DocumentType<OfferEntity> | null>;
   incRatingCount(offerId: string): Promise<DocumentType<OfferEntity> | null>;
-  findById(id: string): Promise<DocumentType<OfferEntity> | null>;
+  findById(id: string, userId?: string): Promise<DocumentType<OfferEntity> | null>;
   deleteById(offerId: string): Promise<DocumentType<OfferEntity> | null>;
 }
