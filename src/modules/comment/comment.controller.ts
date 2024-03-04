@@ -27,15 +27,13 @@ export class CommentController extends BaseController {
       path: '/:offerId',
       method: HttpMethod.Get,
       handler: this.findByOfferId,
-      middlewares: [
-        new PrivateRouteMiddleware(),
-        new ValidateObjectIdMiddleware('offerId'),
-      ],
+      middlewares: [new ValidateObjectIdMiddleware('offerId')],
     });
     this.addRoute({
       path: '/',
       method: HttpMethod.Post,
       handler: this.create,
+      middlewares: [new PrivateRouteMiddleware()],
     });
   }
 

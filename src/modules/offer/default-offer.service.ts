@@ -8,6 +8,7 @@ import { UpdateOfferDto } from './dto/update-offer.dto.js';
 import { CreateOfferDto } from './dto/create-offer.dto.js';
 import { CommentEntity } from '../comment/index.js';
 import mongoose from 'mongoose';
+import { UserEntity } from '../user/index.js';
 
 @injectable()
 export class DefaultOfferService implements OfferService {
@@ -16,7 +17,9 @@ export class DefaultOfferService implements OfferService {
     @inject(Component.OfferModel)
     private readonly offerModel: types.ModelType<OfferEntity>,
     @inject(Component.CommentModel)
-    private readonly commentModel: types.ModelType<CommentEntity>
+    private readonly commentModel: types.ModelType<CommentEntity>,
+    @inject(Component.UserModel)
+    private readonly userModel: types.ModelType<UserEntity>
   ) {}
 
   public async create(dto: CreateOfferDto): Promise<DocumentType<OfferEntity>> {
@@ -158,8 +161,16 @@ export class DefaultOfferService implements OfferService {
     return this.offerModel.find({ city: city, premium: true }).exec();
   }
 
-  public async findFavoriteOffers(): Promise<DocumentType<OfferEntity>[] | null> {
-    return this.offerModel.find({ isFavorite: true });
+  public async findFavoriteOffers(
+    userId: string
+  ): Promise<DocumentType<OfferEntity>[] | null> {
+    const user = await this.userModel.findById(userId).exec();
+
+    if (user && user.favorites) {
+      return this.offerModel.find({ _id: { $in: user.favorites } }).exec();
+    }
+
+    return [];
   }
 
   public async updateById(

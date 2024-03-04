@@ -42,6 +42,12 @@ export class OfferController extends BaseController {
       handler: this.find,
     });
     this.addRoute({
+      path: '/favorites',
+      method: HttpMethod.Get,
+      handler: this.favoriteOffers,
+      middlewares: [new PrivateRouteMiddleware()],
+    });
+    this.addRoute({
       path: '/:offerId',
       method: HttpMethod.Get,
       handler: this.findById,
@@ -75,17 +81,13 @@ export class OfferController extends BaseController {
       method: HttpMethod.Delete,
       handler: this.delete,
       middlewares: [
+        new PrivateRouteMiddleware(),
         new ValidateObjectIdMiddleware('offerId'),
         new DocumentExistsMiddleware(this.offerService, 'Offer', 'offerId'),
       ],
     });
     this.addRoute({
-      path: '/favorites',
-      method: HttpMethod.Get,
-      handler: this.favoriteOffers,
-    });
-    this.addRoute({
-      path: '/:offerId/favorites',
+      path: '/favorites/:offerId',
       method: HttpMethod.Patch,
       handler: this.switchFavorite,
       middlewares: [
@@ -163,12 +165,10 @@ export class OfferController extends BaseController {
     this.ok(res, fillDTO(OfferRdo, updatedOffer));
   }
 
-  public async favoriteOffers(_req: Request, _res: Response): Promise<void> {
-    throw new HttpError(
-      StatusCodes.NOT_IMPLEMENTED,
-      'Not implemented',
-      'OfferController'
-    );
+  public async favoriteOffers({ tokenPayload }: Request, res: Response): Promise<void> {
+    const offers = await this.offerService.findFavoriteOffers(tokenPayload?.id);
+    const responseData = fillDTO(OfferRdo, offers);
+    this.ok(res, responseData);
   }
 
   public async switchFavorite(
@@ -193,13 +193,6 @@ export class OfferController extends BaseController {
     const { offerId } = params;
     const offer = await this.offerService.deleteById(offerId);
 
-    if (!offer) {
-      throw new HttpError(
-        StatusCodes.NOT_FOUND,
-        `Offer with id ${offerId} not found.`,
-        'OfferController'
-      );
-    }
     this.ok(res, fillDTO(OfferRdo, offer));
   }
 
