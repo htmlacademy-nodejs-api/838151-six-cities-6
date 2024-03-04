@@ -1,5 +1,6 @@
-import { IsEmail, IsString, MaxLength, MinLength } from 'class-validator';
+import { IsEmail, IsEnum, IsString, MaxLength, MinLength } from 'class-validator';
 import { CreateUserValidationMessage } from './create-user.message.js';
+import { UserType } from '../../../types/user-type.enum.js';
 
 export class CreateUserDto {
   @IsEmail({}, { message: CreateUserValidationMessage.email.invalid })
@@ -14,4 +15,7 @@ export class CreateUserDto {
   @MinLength(6, { message: CreateUserValidationMessage.password.minLength })
   @MaxLength(12, { message: CreateUserValidationMessage.password.maxLength })
   public password: string;
+
+  @IsEnum(UserType, { message: CreateUserValidationMessage.type.invalid })
+  public userType: UserType;
 }

@@ -12,4 +12,7 @@ export const CreateUserValidationMessage = {
     minLength: 'Password must be longer than or equal to 6 characters.',
     maxLength: 'Password must be shorter than or equal to 12 characters.',
   },
+  type: {
+    invalid: 'Type must be one of these: "pro", "normal".',
+  },
 };
