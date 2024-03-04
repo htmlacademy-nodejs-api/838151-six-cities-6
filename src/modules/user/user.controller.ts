@@ -56,10 +56,16 @@ export class UserController extends BaseController {
     });
   }
 
-  public async checkAuthenticate({ tokenPayload: { email } }: Request, res: Response) {
-    const foundedUser = await this.userService.findByEmail(email);
+  public async checkAuthenticate({ tokenPayload }: Request, res: Response) {
+    const foundedUser = await this.userService.findByEmail(tokenPayload.email);
+    console.log(tokenPayload);
 
-    if (!foundedUser) {
+    const currentTime = Date.now() / 1000;
+
+    if (
+      !foundedUser ||
+      (tokenPayload.exp !== undefined && tokenPayload?.exp < currentTime)
+    ) {
       throw new HttpError(StatusCodes.UNAUTHORIZED, 'Unauthorized', 'UserController');
     }
 
