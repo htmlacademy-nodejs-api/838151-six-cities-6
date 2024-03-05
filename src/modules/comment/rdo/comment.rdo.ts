@@ -1,16 +1,30 @@
-import { Expose } from 'class-transformer';
-import { ObjectId } from 'mongoose';
+import { Expose, Transform, Type } from 'class-transformer';
+import { UserRdo } from '../../user/rdo/user.rdo.js';
+import mongoose from 'mongoose';
 
 export class CommentRdo {
+  @Expose({ name: '_id' })
+  @Transform((value) => {
+    if ('value' in value) {
+      return value.value instanceof mongoose.Types.ObjectId
+        ? value.obj._id.toHexString()
+        : value.obj._id.toString();
+    }
+
+    return 'unknown value';
+  })
+  public id: string;
+
   @Expose()
-  public text: string;
+  public comment: string;
 
   @Expose()
   public rating: number;
 
-  @Expose()
-  public userId: ObjectId;
+  @Expose({ name: 'userId' })
+  @Type(() => UserRdo)
+  public user: UserRdo;
 
-  @Expose()
-  public createdAt: Date;
+  @Expose({ name: 'createdAt' })
+  public date: string;
 }

@@ -27,18 +27,18 @@ paths:
         content:
           application/json:
             schema:
-              $ref: "#/components/schemas/createUser"
+              $ref: '#/components/schemas/createUser'
         required: true
 
       responses:
-        "201":
+        '201':
           description: Пользователь зарегистрирован. Объект пользователя.
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/user"
+                $ref: '#/components/schemas/user'
 
-        "409":
+        '409':
           description: Пользователь с таким email уже существует.
 
   /users/login:
@@ -63,7 +63,7 @@ paths:
                   type: string
                   example: 123456
       responses:
-        "200":
+        '200':
           description: Успешная авторизация. Токен доступа.
           content:
             application/json:
@@ -73,7 +73,7 @@ paths:
                   accessToken:
                     type: string
                     example: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...
-        "401":
+        '401':
           description: Неуспешная авторизация. Неверные учетные данные.
           content:
             application/json:
@@ -83,7 +83,7 @@ paths:
                   message:
                     type: string
                     example: Неверный email или пароль.
-        "404":
+        '404':
           description: Неуспешная авторизация. Пользователь не найден.
           content:
             application/json:
@@ -101,13 +101,13 @@ paths:
       description: Возвращает информацию по авторизованному пользователю
 
       responses:
-        "200":
+        '200':
           description: Успешная проверка состояния пользователя.
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/user"
-        "401":
+                $ref: '#/components/schemas/user'
+        '401':
           description: Пользователь не авторизован. Требуется авторизация.
           content:
             application/json:
@@ -128,7 +128,7 @@ paths:
         - bearerAuth: []
 
       responses:
-        "200":
+        '200':
           description: Успешный выход пользователя из системы.
 
   /users/{userId}/avatar:
@@ -152,11 +152,11 @@ paths:
                   type: string
                   format: binary
       responses:
-        "200":
+        '200':
           description: Изображение аватара успешно загружено.
-        "400":
+        '400':
           description: Неверный формат изображения. Изображение должно быть в формате `png` или `jpg`.
-        "401":
+        '401':
           description: Пользователь не авторизован. Требуется авторизация.
           content:
             application/json:
@@ -166,7 +166,7 @@ paths:
                   message:
                     type: string
                     example: Пользователь не авторизован. Требуется войти в систему.
-        "404":
+        '404':
           description: Пользователь с указанным ID не найден.
           content:
             application/json:
@@ -184,14 +184,14 @@ paths:
       summary: Получение предложений по аренде
       description: Получает предложения по аренде (по умолчанию первые 60).
       responses:
-        "200":
+        '200':
           description: Успешный запрос. Список предложений.
           content:
             application/json:
               schema:
                 type: array
                 items:
-                  $ref: "#/components/schemas/offer"
+                  $ref: '#/components/schemas/offer'
 
     post:
       tags:
@@ -206,15 +206,15 @@ paths:
         content:
           application/json:
             schema:
-              $ref: "#/components/schemas/offer"
+              $ref: '#/components/schemas/offer'
       responses:
-        "201":
+        '201':
           description: Предложение успешно создано.
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/offer"
-        "400":
+                $ref: '#/components/schemas/offer'
+        '400':
           description: Неверный формат данных предложения или отсутствие обязательных полей.
           content:
             application/json:
@@ -224,7 +224,7 @@ paths:
                   message:
                     type: string
                     example: Неверный формат данных предложения или отсутствие обязательных полей.
-        "401":
+        '401':
           description: Пользователь не авторизован. Требуется авторизация.
           content:
             application/json:
@@ -235,21 +235,21 @@ paths:
                     type: string
                     example: Пользователь не авторизован. Требуется войти в систему.
 
-  /offers/premium/{cityId}:
+  /offers/premium/?city={cityName}:
     get:
       tags:
         - offers
       summary: Получение премиум предложений по аренде для определенного города
       description: Получает премиум предложения по аренде для определенного города (не больше 3).
       responses:
-        "200":
+        '200':
           description: Успешный запрос. Список премиум предложений.
           content:
             application/json:
               schema:
                 type: array
                 items:
-                  $ref: "#/components/schemas/offer"
+                  $ref: '#/components/schemas/offer'
 
   /offers/favorites:
     get:
@@ -260,15 +260,15 @@ paths:
       security:
         - bearerAuth: []
       responses:
-        "200":
+        '200':
           description: Успешный запрос. Список предложений.
           content:
             application/json:
               schema:
                 type: array
                 items:
-                  $ref: "#/components/schemas/offer"
-        "401":
+                  $ref: '#/components/schemas/offer'
+        '401':
           description: Пользователь не авторизован. Требуется авторизация.
           content:
             application/json:
@@ -279,7 +279,7 @@ paths:
                     type: string
                     example: Пользователь не авторизован. Требуется войти в систему.
 
-  /offers/favorites/{offerId}:
+  /offers/{offerId}/favorites:
     get:
       tags:
         - offers
@@ -295,7 +295,7 @@ paths:
           schema:
             type: string
       responses:
-        "200":
+        '200':
           description: Успешный запрос. Статус избранного предложения.
           content:
             application/json:
@@ -305,7 +305,7 @@ paths:
                   favorite:
                     type: boolean
                     example: true
-        "401":
+        '401':
           description: Пользователь не авторизован. Требуется авторизация.
           content:
             application/json:
@@ -330,13 +330,13 @@ paths:
           schema:
             type: string
       responses:
-        "200":
+        '200':
           description: Успешный запрос. Детальная информация по предложению.
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/offer"
-        "404":
+                $ref: '#/components/schemas/offer'
+        '404':
           description: Предложение с указанным ID не найдено.
           content:
             application/json:
@@ -347,7 +347,7 @@ paths:
                     type: string
                     example: Предложение с указанным ID не найдено."
 
-    put:
+    patch:
       tags:
         - offers
       summary: Обновление предложения
@@ -367,15 +367,15 @@ paths:
         content:
           application/json:
             schema:
-              $ref: "#/components/schemas/offer"
+              $ref: '#/components/schemas/offer'
       responses:
-        "200":
+        '200':
           description: Предложение успешно обновлено.
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/offer"
-        "400":
+                $ref: '#/components/schemas/offer'
+        '400':
           description: Неверный формат данных предложения или отсутствие обязательных полей.
           content:
             application/json:
@@ -385,7 +385,7 @@ paths:
                   message:
                     type: string
                     example: Неверный формат данных предложения или отсутствие обязательных полей.
-        "401":
+        '401':
           description: Пользователь не авторизован. Требуется авторизация.
           content:
             application/json:
@@ -395,7 +395,7 @@ paths:
                   message:
                     type: string
                     example: Пользователь не авторизован. Требуется войти в систему.
-        "404":
+        '404':
           description: Предложение с указанным ID не найдено.
           content:
             application/json:
@@ -421,9 +421,9 @@ paths:
           schema:
             type: string
       responses:
-        "200":
+        '200':
           description: Предложение успешно удалено.
-        "401":
+        '401':
           description: Пользователь не авторизован. Требуется авторизация.
           content:
             application/json:
@@ -433,7 +433,7 @@ paths:
                   message:
                     type: string
                     example: Пользователь не авторизован. Требуется войти в систему.
-        "404":
+        '404':
           description: Предложение с указанным ID не найдено.
           content:
             application/json:
@@ -458,15 +458,15 @@ paths:
         content:
           application/json:
             schema:
-              $ref: "#/components/schemas/comments"
+              $ref: '#/components/schemas/comments'
       responses:
-        "201":
+        '201':
           description: Комментарий успешно создан.
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/comments"
-        "400":
+                $ref: '#/components/schemas/comments'
+        '400':
           description: Неверный формат данных комментария или отсутствие обязательных полей.
           content:
             application/json:
@@ -476,7 +476,7 @@ paths:
                   message:
                     type: string
                     example: Неверный формат данных комментария или отсутствие обязательных полей.
-        "401":
+        '401':
           description: Пользователь не авторизован. Требуется авторизация.
           content:
             application/json:
@@ -501,15 +501,15 @@ paths:
           schema:
             type: string
       responses:
-        "200":
+        '200':
           description: Успешный запрос. Список комментариев.
           content:
             application/json:
               schema:
                 type: array
                 items:
-                  $ref: "#/components/schemas/comments"
-        "404":
+                  $ref: '#/components/schemas/comments'
+        '404':
           description: Комментарии для предложения с указанным ID не найдены.
           content:
             application/json:
@@ -560,7 +560,7 @@ components:
 
         avatar:
           type: string
-          example: "https://proprikol.ru/wp-content/uploads/2020/08/krasivye-kartinki-kotikov-44.jpg"
+          example: 'https://proprikol.ru/wp-content/uploads/2020/08/krasivye-kartinki-kotikov-44.jpg'
 
         type:
           type: string
@@ -572,24 +572,20 @@ components:
           type: string
           minLength: 10
           maxLength: 100
-          example: "Уютная квартира в центре"
+          example: 'Уютная квартира в центре'
         description:
           type: string
           minLength: 20
           maxLength: 1024
-          example: "Просторная квартира с видом на парк"
-        publicationDate:
-          type: string
-          format: date-time
-          example: "2024-02-12T12:00:00Z"
+          example: 'Просторная квартира с видом на парк'
         city:
           type: string
           enum: [city1, city2, city3, city4, city5, city6]
-          example: "city1"
+          example: 'city1'
         previewImage:
           type: string
           format: uri
-          example: "https://example.com/preview.jpg"
+          example: 'https://example.com/preview.jpg'
         images:
           type: array
           items:
@@ -598,44 +594,41 @@ components:
           minItems: 6
           maxItems: 6
           example:
-            - "https://example.com/image1.jpg"
-            - "https://example.com/image2.jpg"
-            - "https://example.com/image3.jpg"
-            - "https://example.com/image4.jpg"
-            - "https://example.com/image5.jpg"
-            - "https://example.com/image6.jpg"
-        premium:
+            - 'https://example.com/image1.jpg'
+            - 'https://example.com/image2.jpg'
+            - 'https://example.com/image3.jpg'
+            - 'https://example.com/image4.jpg'
+            - 'https://example.com/image5.jpg'
+            - 'https://example.com/image6.jpg'
+        isPremium:
           type: boolean
           example: true
-        favorite:
-          type: boolean
-          example: false
         rating:
           type: number
           minimum: 1
           maximum: 5
           multipleOf: 0.1
           example: 4.5
-        propertyType:
+        type:
           type: string
           enum: [apartment, house, room, hotel]
-          example: "apartment"
-        rooms:
+          example: 'apartment'
+        bedrooms:
           type: integer
           minimum: 1
           maximum: 8
           example: 3
-        guests:
+        maxAdults:
           type: integer
           minimum: 1
           maximum: 10
           example: 4
-        rentCost:
+        price:
           type: number
           minimum: 100
           maximum: 100000
           example: 1500
-        amenities:
+        goods:
           type: array
           items:
             type: string
@@ -651,15 +644,12 @@ components:
               ]
           uniqueItems: true
           example:
-            - "Breakfast"
-            - "Air conditioning"
-            - "Washer"
-        author:
+            - 'Breakfast'
+            - 'Air conditioning'
+            - 'Washer'
+        host:
           type: string
-          example: "6329c3d6a04ab1061c6425ea"
-        commentsCount:
-          type: integer
-          example: 10
+          example: '6329c3d6a04ab1061c6425ea'
         coordinates:
           type: object
           properties:
@@ -676,17 +666,11 @@ components:
 
     comments:
       properties:
-        text:
+        comment:
           type: string
           minLength: 5
           maxLength: 1024
-        publicationDate:
-          type: string
-          format: date-time
         rating:
           type: number
           minimum: 1
           maximum: 5
-        author:
-          type: string
-          example: "6329c3d6a04ab1061c6425ea"

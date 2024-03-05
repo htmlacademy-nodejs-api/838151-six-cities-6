@@ -7,6 +7,9 @@ import { OfferEntity } from './offer.entity.js';
 import { UpdateOfferDto } from './dto/update-offer.dto.js';
 import { CreateOfferDto } from './dto/create-offer.dto.js';
 import { CommentEntity } from '../comment/index.js';
+import mongoose from 'mongoose';
+import { UserEntity } from '../user/index.js';
+import { plainToInstance } from 'class-transformer';
 
 @injectable()
 export class DefaultOfferService implements OfferService {
@@ -15,11 +18,14 @@ export class DefaultOfferService implements OfferService {
     @inject(Component.OfferModel)
     private readonly offerModel: types.ModelType<OfferEntity>,
     @inject(Component.CommentModel)
-    private readonly commentModel: types.ModelType<CommentEntity>
+    private readonly commentModel: types.ModelType<CommentEntity>,
+    @inject(Component.UserModel)
+    private readonly userModel: types.ModelType<UserEntity>
   ) {}
 
   public async create(dto: CreateOfferDto): Promise<DocumentType<OfferEntity>> {
-    const result = await this.offerModel.create(dto);
+    const newOffer = dto;
+    const result = await this.offerModel.create(newOffer);
     this.logger.info(`New offer created: ${dto.title}`);
 
     return result;
@@ -37,59 +43,203 @@ export class DefaultOfferService implements OfferService {
       .exec();
   }
 
-  public async find(): Promise<DocumentType<OfferEntity>[]> {
-    return this.offerModel
+  public async incRatingCount(
+    offerId: string
+  ): Promise<DocumentType<OfferEntity> | null> {
+    const comments = await this.commentModel.find({ offerId: offerId }).exec();
+
+    if (comments.length === 0) {
+      return null;
+    }
+
+    const totalRating = comments.reduce((acc, comment) => acc + comment.rating, 0);
+
+    const averageRating = (totalRating / comments.length).toFixed(1);
+
+    const updatedOffer = await this.offerModel
+      .findByIdAndUpdate(offerId, { rating: averageRating })
+      .exec();
+
+    return updatedOffer;
+  }
+
+  public async find(
+    count: number,
+    userId?: string
+  ): Promise<DocumentType<OfferEntity>[]> {
+    return await this.offerModel
       .aggregate([
         {
           $lookup: {
-            from: 'comments',
-            let: { offerId: '$_id' },
-            pipeline: [
-              { $match: { $expr: { $eq: ['$offerId', '$$offerId'] } } },
-              { $project: { _id: 1 } },
-            ],
-            as: 'comments',
+            as: 'matchedUsers',
+            from: 'users',
+            foreignField: 'favorites',
+            localField: '_id',
+          },
+        },
+        {
+          $lookup: {
+            as: 'host',
+            from: 'users',
+            foreignField: '_id',
+            localField: 'host',
           },
         },
         {
           $addFields: {
-            numberOfComments: { $size: '$comments' },
+            favorite: {
+              $cond: {
+                if: {
+                  $gt: [
+                    {
+                      $size: {
+                        $filter: {
+                          input: '$matchedUsers',
+                          as: 'user',
+                          cond: { $eq: ['$$user._id', { $toObjectId: userId }] },
+                        },
+                      },
+                    },
+                    0,
+                  ],
+                },
+                then: true,
+                else: false,
+              },
+            },
+            host: { $arrayElemAt: ['$host', 0] },
           },
         },
         {
-          $project: {
-            comments: 0,
-          },
+          $limit: count,
         },
       ])
       .exec();
   }
 
-  public async findById(offerId: string): Promise<DocumentType<OfferEntity> | null> {
-    return this.offerModel.findOne({ _id: offerId }).exec();
+  public async exists(documentId: string): Promise<boolean> {
+    return (await this.offerModel.exists({ _id: documentId })) !== null;
+  }
+
+  public async findById(
+    offerId: string,
+    userId: string
+  ): Promise<DocumentType<OfferEntity> | null> {
+    const offer = await this.offerModel
+      .aggregate([
+        { $match: { _id: new mongoose.Types.ObjectId(offerId) } },
+        {
+          $lookup: {
+            as: 'matchedUsers',
+            from: 'users',
+            foreignField: 'favorites',
+            localField: '_id',
+          },
+        },
+        {
+          $lookup: {
+            as: 'host',
+            from: 'users',
+            foreignField: '_id',
+            localField: 'host',
+          },
+        },
+        {
+          $addFields: {
+            favorite: {
+              $cond: {
+                if: {
+                  $gt: [
+                    {
+                      $size: {
+                        $filter: {
+                          input: '$matchedUsers',
+                          as: 'user',
+                          cond: { $eq: ['$$user._id', { $toObjectId: userId }] },
+                        },
+                      },
+                    },
+                    0,
+                  ],
+                },
+                then: true,
+                else: false,
+              },
+            },
+            host: { $arrayElemAt: ['$host', 0] },
+          },
+        },
+      ])
+      .exec();
+
+    return offer[0];
   }
 
   public async findPremiumOffersByCity(
     city: string
   ): Promise<DocumentType<OfferEntity>[] | null> {
-    return this.offerModel.find({ city: city, premium: true }).exec();
+    return this.offerModel.find({ 'city.name': city, premium: true }).exec();
   }
 
-  public async findFavoriteOffers(): Promise<DocumentType<OfferEntity>[] | null> {
-    return this.offerModel.find({ isFavorite: true });
+  public async findFavoriteOffers(
+    userId: string
+  ): Promise<DocumentType<OfferEntity>[] | null> {
+    const user = await this.userModel.findById(userId).exec();
+
+    if (user && user.favorites) {
+      const offers = await this.offerModel
+        .aggregate([
+          { $match: { _id: { $in: user.favorites } } },
+          {
+            $lookup: {
+              as: 'matchedUsers',
+              from: 'users',
+              foreignField: 'favorites',
+              localField: '_id',
+            },
+          },
+          {
+            $addFields: {
+              favorite: {
+                $cond: {
+                  if: {
+                    $gt: [
+                      {
+                        $size: {
+                          $filter: {
+                            input: '$matchedUsers',
+                            as: 'user',
+                            cond: { $eq: ['$$user._id', { $toObjectId: userId }] },
+                          },
+                        },
+                      },
+                      0,
+                    ],
+                  },
+                  then: true,
+                  else: false,
+                },
+              },
+            },
+          },
+        ])
+        .exec();
+
+      return offers;
+    }
+
+    return [];
   }
 
   public async updateById(
     offerId: string,
     dto: UpdateOfferDto
   ): Promise<DocumentType<OfferEntity> | null> {
-    return this.offerModel.findByIdAndUpdate(offerId, dto, { new: true }).exec();
-  }
+    const updaterOffer = plainToInstance(UpdateOfferDto, dto, {
+      excludeExtraneousValues: true,
+    });
 
-  public async switchFavorite(
-    offerId: string
-  ): Promise<DocumentType<OfferEntity> | null> {
-    return this.findById(offerId);
+    return this.offerModel.findByIdAndUpdate(offerId, updaterOffer, { new: true }).exec();
   }
 
   public async deleteById(offerId: string): Promise<DocumentType<OfferEntity> | null> {

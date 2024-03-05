@@ -1,11 +1,18 @@
 import { inject, injectable } from 'inversify';
 import { Request, Response } from 'express';
-import { BaseController, HttpMethod } from '../../libs/rest/index.js';
+import {
+  BaseController,
+  HttpMethod,
+  ValidateDtoMiddleware,
+  ValidateObjectIdMiddleware,
+} from '../../libs/rest/index.js';
 import { Logger } from '../../libs/logger/index.js';
 import { Component } from '../../types/index.js';
 import { CommentService } from './comment-service.interface.js';
 import { fillDTO } from '../../helpers/index.js';
 import { CommentRdo, CreateCommentDto } from './index.js';
+import { CreateCommentRequest } from './types/create-comment-request.type.js';
+import { PrivateRouteMiddleware } from '../../libs/rest/middleware/private-route.middleware.js';
 
 @injectable()
 export class CommentController extends BaseController {
@@ -21,8 +28,18 @@ export class CommentController extends BaseController {
       path: '/:offerId',
       method: HttpMethod.Get,
       handler: this.findByOfferId,
+      middlewares: [new ValidateObjectIdMiddleware('offerId')],
     });
-    this.addRoute({ path: '/', method: HttpMethod.Post, handler: this.create });
+    this.addRoute({
+      path: '/:offerId',
+      method: HttpMethod.Post,
+      handler: this.create,
+      middlewares: [
+        new PrivateRouteMiddleware(),
+        new ValidateObjectIdMiddleware('offerId'),
+        new ValidateDtoMiddleware(CreateCommentDto),
+      ],
+    });
   }
 
   public async findByOfferId(req: Request, res: Response): Promise<void> {
@@ -32,10 +49,16 @@ export class CommentController extends BaseController {
   }
 
   public async create(
-    { body }: Request<Record<string, unknown>, Record<string, unknown>, CreateCommentDto>,
+    { params, tokenPayload, body }: CreateCommentRequest,
     res: Response
   ): Promise<void> {
-    const newComment = await this.commentService.create(body);
-    this.created(res, fillDTO(CommentRdo, newComment));
+    const { offerId } = params;
+    const result = await this.commentService.create(offerId, {
+      ...body,
+      userId: tokenPayload.id,
+      offerId: offerId,
+    });
+    const comment = await this.commentService.findById(result.id);
+    this.created(res, fillDTO(CommentRdo, comment));
   }
 }
