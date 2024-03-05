@@ -5,7 +5,7 @@ export class CreateCommentDto {
   @IsString({ message: CreateCommentValidationMessage.text.invalid })
   @MinLength(5, { message: CreateCommentValidationMessage.text.minLength })
   @MaxLength(1024, { message: CreateCommentValidationMessage.text.maxLength })
-  public text: string;
+  public comment: string;
 
   @IsNumber({}, { message: CreateCommentValidationMessage.rating.invalid })
   @Min(1, { message: CreateCommentValidationMessage.rating.min })

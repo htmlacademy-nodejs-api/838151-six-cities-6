@@ -17,11 +17,14 @@ export class DefaultCommentService implements CommentService {
     @inject(Component.OfferService) private readonly offerService: OfferService
   ) {}
 
-  public async create(dto: CreateCommentDto): Promise<DocumentType<CommentEntity>> {
+  public async create(
+    offerId: string,
+    dto: CreateCommentDto
+  ): Promise<DocumentType<CommentEntity>> {
     const result = await this.commentModel.create(dto);
-    await this.offerService.incCommentCount(dto.offerId);
-    await this.offerService.incRatingCount(dto.offerId);
-    this.logger.info(`New comment created: ${dto.text}`);
+    await this.offerService.incCommentCount(offerId);
+    await this.offerService.incRatingCount(offerId);
+    this.logger.info(`New comment created: ${dto.comment}`);
 
     return result;
   }
@@ -32,7 +35,7 @@ export class DefaultCommentService implements CommentService {
 
   public async findByOfferId(offerId: string): Promise<DocumentType<CommentEntity>[]> {
     return this.commentModel
-      .find({ offerId })
+      .find({ offerId: offerId })
       .populate('userId')
       .sort({ createdAt: SortType.Down })
       .limit(DEFAULT_COMMENT_COUNT);

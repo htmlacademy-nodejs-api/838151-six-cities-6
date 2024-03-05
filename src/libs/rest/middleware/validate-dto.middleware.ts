@@ -13,7 +13,9 @@ export class ValidateDtoMiddleware implements Middleware {
     _res: Response,
     next: NextFunction
   ): Promise<void> {
-    const dtoInstance = plainToInstance(this.dto, body);
+    const dtoInstance = plainToInstance(this.dto, body, {
+      excludeExtraneousValues: true,
+    });
     const errors = await validate(dtoInstance);
 
     if (errors.length > 0) {

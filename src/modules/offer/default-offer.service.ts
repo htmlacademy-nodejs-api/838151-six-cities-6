@@ -9,6 +9,7 @@ import { CreateOfferDto } from './dto/create-offer.dto.js';
 import { CommentEntity } from '../comment/index.js';
 import mongoose from 'mongoose';
 import { UserEntity } from '../user/index.js';
+import { plainToInstance } from 'class-transformer';
 
 @injectable()
 export class DefaultOfferService implements OfferService {
@@ -23,7 +24,8 @@ export class DefaultOfferService implements OfferService {
   ) {}
 
   public async create(dto: CreateOfferDto): Promise<DocumentType<OfferEntity>> {
-    const result = await this.offerModel.create(dto);
+    const newOffer = dto;
+    const result = await this.offerModel.create(newOffer);
     this.logger.info(`New offer created: ${dto.title}`);
 
     return result;
@@ -65,7 +67,7 @@ export class DefaultOfferService implements OfferService {
     count: number,
     userId?: string
   ): Promise<DocumentType<OfferEntity>[]> {
-    return this.offerModel
+    return await this.offerModel
       .aggregate([
         {
           $lookup: {
@@ -73,6 +75,14 @@ export class DefaultOfferService implements OfferService {
             from: 'users',
             foreignField: 'favorites',
             localField: '_id',
+          },
+        },
+        {
+          $lookup: {
+            as: 'host',
+            from: 'users',
+            foreignField: '_id',
+            localField: 'host',
           },
         },
         {
@@ -97,6 +107,7 @@ export class DefaultOfferService implements OfferService {
                 else: false,
               },
             },
+            host: { $arrayElemAt: ['$host', 0] },
           },
         },
         {
@@ -126,6 +137,14 @@ export class DefaultOfferService implements OfferService {
           },
         },
         {
+          $lookup: {
+            as: 'host',
+            from: 'users',
+            foreignField: '_id',
+            localField: 'host',
+          },
+        },
+        {
           $addFields: {
             favorite: {
               $cond: {
@@ -147,6 +166,7 @@ export class DefaultOfferService implements OfferService {
                 else: false,
               },
             },
+            host: { $arrayElemAt: ['$host', 0] },
           },
         },
       ])
@@ -158,7 +178,7 @@ export class DefaultOfferService implements OfferService {
   public async findPremiumOffersByCity(
     city: string
   ): Promise<DocumentType<OfferEntity>[] | null> {
-    return this.offerModel.find({ city: city, premium: true }).exec();
+    return this.offerModel.find({ 'city.name': city, premium: true }).exec();
   }
 
   public async findFavoriteOffers(
@@ -167,7 +187,45 @@ export class DefaultOfferService implements OfferService {
     const user = await this.userModel.findById(userId).exec();
 
     if (user && user.favorites) {
-      return this.offerModel.find({ _id: { $in: user.favorites } }).exec();
+      const offers = await this.offerModel
+        .aggregate([
+          { $match: { _id: { $in: user.favorites } } },
+          {
+            $lookup: {
+              as: 'matchedUsers',
+              from: 'users',
+              foreignField: 'favorites',
+              localField: '_id',
+            },
+          },
+          {
+            $addFields: {
+              favorite: {
+                $cond: {
+                  if: {
+                    $gt: [
+                      {
+                        $size: {
+                          $filter: {
+                            input: '$matchedUsers',
+                            as: 'user',
+                            cond: { $eq: ['$$user._id', { $toObjectId: userId }] },
+                          },
+                        },
+                      },
+                      0,
+                    ],
+                  },
+                  then: true,
+                  else: false,
+                },
+              },
+            },
+          },
+        ])
+        .exec();
+
+      return offers;
     }
 
     return [];
@@ -177,7 +235,11 @@ export class DefaultOfferService implements OfferService {
     offerId: string,
     dto: UpdateOfferDto
   ): Promise<DocumentType<OfferEntity> | null> {
-    return this.offerModel.findByIdAndUpdate(offerId, dto, { new: true }).exec();
+    const updaterOffer = plainToInstance(UpdateOfferDto, dto, {
+      excludeExtraneousValues: true,
+    });
+
+    return this.offerModel.findByIdAndUpdate(offerId, updaterOffer, { new: true }).exec();
   }
 
   public async deleteById(offerId: string): Promise<DocumentType<OfferEntity> | null> {

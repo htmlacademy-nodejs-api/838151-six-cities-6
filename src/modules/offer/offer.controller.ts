@@ -2,7 +2,6 @@ import { inject, injectable } from 'inversify';
 import {
   BaseController,
   DocumentExistsMiddleware,
-  HttpError,
   HttpMethod,
   UploadFileMiddleware,
   ValidateDtoMiddleware,
@@ -16,7 +15,6 @@ import { OfferRdo } from './rdo/offer.rdo.js';
 import { OfferService } from './offer-service.interface.js';
 import { CreateOfferDto, UpdateOfferDto, UploadImageRdo } from './index.js';
 import { ParamsDictionary } from 'express-serve-static-core';
-import { StatusCodes } from 'http-status-codes';
 import { CreateOfferRequest } from './type/create-offer-request.type.js';
 import { ParamOfferId } from './type/param-offerid.type.js';
 import { PrivateRouteMiddleware } from '../../libs/rest/middleware/private-route.middleware.js';
@@ -46,6 +44,11 @@ export class OfferController extends BaseController {
       method: HttpMethod.Get,
       handler: this.favoriteOffers,
       middlewares: [new PrivateRouteMiddleware()],
+    });
+    this.addRoute({
+      path: '/premium/',
+      method: HttpMethod.Get,
+      handler: this.findPremiumOffersByCity,
     });
     this.addRoute({
       path: '/:offerId',
@@ -88,17 +91,12 @@ export class OfferController extends BaseController {
     });
     this.addRoute({
       path: '/favorites/:offerId',
-      method: HttpMethod.Patch,
+      method: HttpMethod.Post,
       handler: this.switchFavorite,
       middlewares: [
         new ValidateObjectIdMiddleware('offerId'),
         new DocumentExistsMiddleware(this.offerService, 'Offer', 'offerId'),
       ],
-    });
-    this.addRoute({
-      path: '/premium/:city',
-      method: HttpMethod.Get,
-      handler: this.findPremiumOffersByCity,
     });
     this.addRoute({
       path: '/:offerId/image',
@@ -129,23 +127,30 @@ export class OfferController extends BaseController {
   ): Promise<void> {
     const { offerId } = params;
     const offer = await this.offerService.findById(offerId, tokenPayload?.id);
-
     this.ok(res, fillDTO(OfferRdo, offer));
   }
 
   public async findPremiumOffersByCity(
-    { params }: Request<ParamsDictionary, unknown, UpdateOfferDto>,
+    { query }: Request<ParamsDictionary, unknown, UpdateOfferDto>,
     res: Response
   ): Promise<void> {
-    const offer = await this.offerService.findPremiumOffersByCity(params.city);
-    this.ok(res, fillDTO(OfferRdo, offer));
+    let currentCity: string = 'Paris';
+    if (query && typeof query.city === 'string') {
+      currentCity = query.city.toString();
+    }
+    let offers;
+    if (currentCity) {
+      offers = await this.offerService.findPremiumOffersByCity(currentCity);
+    }
+
+    this.ok(res, fillDTO(OfferRdo, offers));
   }
 
   public async create(
     { body, tokenPayload }: CreateOfferRequest,
     res: Response
   ): Promise<void> {
-    const result = await this.offerService.create({ ...body, author: tokenPayload.id });
+    const result = await this.offerService.create({ ...body, host: tokenPayload.id });
     const offer = await this.offerService.findById(result.id);
     this.created(res, fillDTO(OfferRdo, offer));
   }
@@ -155,13 +160,6 @@ export class OfferController extends BaseController {
     res: Response
   ): Promise<void> {
     const updatedOffer = await this.offerService.updateById(params.offerId, body);
-    if (!updatedOffer) {
-      throw new HttpError(
-        StatusCodes.NOT_FOUND,
-        `Offer with id ${params.offerId} not found.`,
-        'OfferController'
-      );
-    }
     this.ok(res, fillDTO(OfferRdo, updatedOffer));
   }
 
@@ -176,17 +174,9 @@ export class OfferController extends BaseController {
     res: Response
   ): Promise<void> {
     const { offerId } = params;
-    const offer = await this.offerService.findById(offerId);
-
-    if (!offer) {
-      throw new HttpError(
-        StatusCodes.NOT_FOUND,
-        `Offer with id ${offerId} not found.`,
-        'OfferController'
-      );
-    }
-    const result = await this.userService.switchFavorite(offerId, tokenPayload.id);
-    this.ok(res, fillDTO(OfferRdo, result));
+    await this.userService.switchFavorite(offerId, tokenPayload.id);
+    const updatedOffer = await this.offerService.findById(offerId, tokenPayload?.id);
+    this.ok(res, fillDTO(OfferRdo, updatedOffer));
   }
 
   public async delete({ params }: Request<ParamOfferId>, res: Response): Promise<void> {

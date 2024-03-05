@@ -1,9 +1,10 @@
 import { AmenitiesType } from '../../../types/amenities.enum.js';
-import { CityType } from '../../../types/city-type.enum.js';
+import { CityType } from '../../../types/city-type.type.js';
 import { ObjectType } from '../../../types/object-type.enum.js';
 import {
   ArrayMinSize,
   IsArray,
+  IsBoolean,
   IsEnum,
   IsNotEmpty,
   IsNumber,
@@ -29,9 +30,11 @@ export class CreateOfferDto {
   @MaxLength(100, { message: CreateOfferValidationMessage.description.maxLength })
   public description: string;
 
-  @IsNotEmpty()
-  @IsEnum(CityType, { message: CreateOfferValidationMessage.city.invalid })
+  @IsNotEmpty({ message: CreateOfferValidationMessage.city.invalid })
   public city: CityType;
+
+  @IsBoolean()
+  public isPremium: boolean;
 
   @IsNotEmpty()
   @IsString({ message: CreateOfferValidationMessage.previewImage.invalid })
@@ -42,29 +45,29 @@ export class CreateOfferDto {
   @IsArray()
   @ArrayMinSize(1, { message: CreateOfferValidationMessage.propertyPhotos.minLength })
   @IsString({ each: true, message: CreateOfferValidationMessage.propertyPhotos.invalid })
-  public propertyPhotos: string[];
+  public images: string[];
 
   @IsNotEmpty()
   @IsEnum(ObjectType, { message: CreateOfferValidationMessage.objectType.invalid })
-  public objectType: ObjectType;
+  public type: ObjectType;
 
   @IsNotEmpty()
   @IsNumber({}, { message: CreateOfferValidationMessage.numberOfRooms.invalid })
   @Min(1, { message: CreateOfferValidationMessage.numberOfRooms.min })
   @Max(8, { message: CreateOfferValidationMessage.numberOfRooms.max })
-  public numberOfRooms: number;
+  public bedrooms: number;
 
   @IsNotEmpty()
   @IsNumber({}, { message: CreateOfferValidationMessage.numberOfGuests.invalid })
   @Min(1, { message: CreateOfferValidationMessage.numberOfGuests.min })
   @Max(10, { message: CreateOfferValidationMessage.numberOfGuests.max })
-  public numberOfGuests: number;
+  public maxAdults: number;
 
   @IsNotEmpty()
   @IsNumber({}, { message: CreateOfferValidationMessage.rentalCost.invalid })
   @Min(100, { message: CreateOfferValidationMessage.rentalCost.min })
   @Max(100000, { message: CreateOfferValidationMessage.rentalCost.max })
-  public rentalCost: number;
+  public price: number;
 
   @IsNotEmpty()
   @IsArray()
@@ -73,11 +76,11 @@ export class CreateOfferDto {
     each: true,
     message: CreateOfferValidationMessage.amenities.invalid,
   })
-  public amenities: AmenitiesType[];
+  public goods: AmenitiesType[];
 
-  public author: string;
+  public host: string;
 
   @IsNotEmpty()
   @ValidateNested({ message: CreateOfferValidationMessage.location.invalid })
-  public locationCoordinates: { latitude: number; longitude: number };
+  public location: { latitude: number; longitude: number };
 }
