@@ -7,20 +7,28 @@ import {
   getRandomItems,
 } from '../../helpers/index.js';
 
-const MIN_RAITING = 1;
-const MAX_RAITING = 5;
-
-const MIN_ROOM_COUNT = 1;
-const MAX_ROOM_COUNT = 8;
-
-const MIN_GUEST_COUNT = 1;
-const MAX_GUEST_COUNT = 10;
-
-const MIN_RENT_PRICE = 100;
-const MAX_RENT_PRICE = 100000;
-
-const MIN_COMMENT_COUNT = 1;
-const MAX_COMMENT_COUNT = 1000;
+const CONSTANTS = {
+  RATING: {
+    MIN: 1,
+    MAX: 5
+  },
+  ROOM_COUNT: {
+    MIN: 1,
+    MAX: 8
+  },
+  GUEST_COUNT: {
+    MIN: 1,
+    MAX: 10
+  },
+  RENT_PRICE: {
+    MIN: 100,
+    MAX: 100000
+  },
+  COMMENT_COUNT: {
+    MIN: 1,
+    MAX: 1000
+  }
+};
 
 export class TSVOfferGenerator implements OfferGenerator {
   constructor(private readonly mockData: MockServerData) {}
@@ -34,29 +42,15 @@ export class TSVOfferGenerator implements OfferGenerator {
     const propertyPhotos = getRandomItems<string>(this.mockData.images);
     const premium = getRandomBoolean();
     const favorite = getRandomBoolean();
-    const rating = generateRandomValue(MIN_RAITING, MAX_RAITING).toString();
+    const rating = generateRandomValue(CONSTANTS.RATING.MIN, CONSTANTS.RATING.MAX).toString();
     const objectType = getRandomItem<string>(this.mockData.types);
-    const numberOfRooms = generateRandomValue(
-      MIN_ROOM_COUNT,
-      MAX_ROOM_COUNT
-    ).toString();
-    const numberOfGuests = generateRandomValue(
-      MIN_GUEST_COUNT,
-      MAX_GUEST_COUNT
-    ).toString();
-    const rentalCost = generateRandomValue(
-      MIN_RENT_PRICE,
-      MAX_RENT_PRICE
-    ).toString();
+    const numberOfRooms = generateRandomValue(CONSTANTS.ROOM_COUNT.MIN, CONSTANTS.ROOM_COUNT.MAX).toString();
+    const numberOfGuests = generateRandomValue(CONSTANTS.GUEST_COUNT.MIN, CONSTANTS.GUEST_COUNT.MAX).toString();
+    const rentalCost = generateRandomValue(CONSTANTS.RENT_PRICE.MIN, CONSTANTS.RENT_PRICE.MAX).toString();
     const amenities = getRandomItems<string>(this.mockData.amenities);
     const author = getRandomItem<string>(this.mockData.users);
-    const numberOfComments = generateRandomValue(
-      MIN_COMMENT_COUNT,
-      MAX_COMMENT_COUNT
-    ).toString();
-    const locationCoordinates = getRandomItem<string>(
-      this.mockData.coordinates
-    );
+    const numberOfComments = generateRandomValue(CONSTANTS.COMMENT_COUNT.MIN, CONSTANTS.COMMENT_COUNT.MAX).toString();
+    const locationCoordinates = getRandomItem<string>(this.mockData.coordinates);
 
     return [
       title,
