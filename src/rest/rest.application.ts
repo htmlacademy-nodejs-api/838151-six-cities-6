@@ -7,8 +7,8 @@ import { getFullServerPath, getMongoURI } from '../helpers/index.js';
 import express, { Express } from 'express';
 import { Controller, ExceptionFilter } from '../libs/rest/index.js';
 import { ParseTokenMiddleware } from '../libs/rest/middleware/parse-token.middleware.js';
-import { STATIC_FILES_ROUTE, STATIC_UPLOAD_ROUTE } from './rest.constant.js';
 import cors from 'cors';
+import {ROUTES} from './rest.constant.js';
 
 @injectable()
 export class RestApplication {
@@ -63,11 +63,11 @@ export class RestApplication {
     );
     this.server.use(express.json());
     this.server.use(
-      STATIC_UPLOAD_ROUTE,
+      ROUTES.STATIC_UPLOAD,
       express.static(this.config.get('UPLOAD_DIRECTORY'))
     );
     this.server.use(
-      STATIC_FILES_ROUTE,
+      ROUTES.STATIC_FILES,
       express.static(this.config.get('STATIC_DIRECTORY_PATH'))
     );
     this.server.use(authenticateMiddleware.execute.bind(authenticateMiddleware));

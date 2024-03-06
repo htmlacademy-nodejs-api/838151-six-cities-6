@@ -5,9 +5,9 @@ import {
 } from './path-transformer.constant.js';
 import { Component } from '../../../types/index.js';
 import { Logger } from '../../logger/index.js';
-import { STATIC_FILES_ROUTE, STATIC_UPLOAD_ROUTE } from '../../../rest/index.js';
 import { getFullServerPath } from '../../../helpers/index.js';
 import { Config, RestSchema } from '../../config/index.js';
+import {ROUTES} from '../../../rest/index.js';
 
 function isObject(value: unknown): value is Record<string, object> {
   return typeof value === 'object' && value !== null;
@@ -45,8 +45,8 @@ export class PathTransformer {
           }
 
           if (this.isStaticProperty(key) && typeof value === 'string') {
-            const staticPath = STATIC_FILES_ROUTE;
-            const uploadPath = STATIC_UPLOAD_ROUTE;
+            const staticPath = ROUTES.STATIC_FILES;
+            const uploadPath = ROUTES.STATIC_UPLOAD;
             const serverHost = this.config.get('HOST');
             const serverPort = this.config.get('PORT');
 
